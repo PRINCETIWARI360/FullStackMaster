@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Components & Props Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --purple: #9b59b6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--purple));
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .card-header i {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "JSX";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        .code-tag {
+            color: #63b3ed;
+        }
+
+        .code-attr {
+            color: #f6ad55;
+        }
+
+        .code-value {
+            color: #68d391;
+        }
+
+        .demo-area {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .demo-container {
+            padding: 20px;
+            border: 2px dashed #3498db;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 200px;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .media-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 2px solid var(--primary);
+        }
+
+        .media-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .media-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .media-card:hover i {
+            color: var(--accent);
+            transform: scale(1.2);
+        }
+
+        .media-card h4 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .media-card p {
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .practice-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid var(--success);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .practice-card h4 {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .practice-card h4 i {
+            color: var(--success);
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        /* Mini Project Styles */
+        .user-profile-app {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .user-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .user-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .user-header {
+            background: linear-gradient(to right, #3498db, #9b59b6);
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+            margin: 0 auto 15px;
+        }
+
+        .user-body {
+            padding: 20px;
+        }
+
+        .user-name {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .user-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skills-container {
+            margin-top: 20px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: #e0f7fa;
+            color: #00796b;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin: 0 5px 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid var(--primary);
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>React Components & Props</h1>
+            <p class="tagline">Building Reusable UI with React</p>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <h2>React Components</h2>
+                </div>
+
+                <p>Components are the building blocks of any React application. They let you split the UI into independent, reusable pieces.</p>
+
+                <h3><i class="fas fa-code"></i> Functional Components</h3>
+                <div class="code-block">
+                    <span class="code-comment">// Simple functional component</span>
+                    <span class="code-tag">function</span> <span class="code-attr">Welcome</span>() {
+                      <span class="code-tag">return</span> <span class="code-tag">&lt;h1&gt;</span>Hello, React!<span class="code-tag">&lt;/h1&gt;</span>;
+                    }
+
+                    <span class="code-comment">// Using the component</span>
+                    <span class="code-tag">function</span> <span class="code-attr">App</span>() {
+                      <span class="code-tag">return</span> (
+                        <span class="code-tag">&lt;div&gt;</span>
+                          <span class="code-tag">&lt;Welcome</span> <span class="code-tag">/&gt;</span>
+                        <span class="code-tag">&lt;/div&gt;</span>
+                      );
+                    }
+                </div>
+
+                <h3><i class="fas fa-code"></i> Class Components</h3>
+                <div class="code-block">
+                    <span class="code-comment">// Class component</span>
+                    <span class="code-tag">class</span> <span class="code-attr">Welcome</span> <span class="code-tag">extends</span> React.<span class="code-attr">Component</span> {
+                      <span class="code-attr">render</span>() {
+                        <span class="code-tag">return</span> <span class="code-tag">&lt;h1&gt;</span>Hello, React!<span class="code-tag">&lt;/h1&gt;</span>;
+                      }
+                    }
+
+                    <span class="code-comment">// Using the component</span>
+                    <span class="code-tag">class</span> <span class="code-attr">App</span> <span class="code-tag">extends</span> React.<span class="code-attr">Component</span> {
+                      <span class="code-attr">render</span>() {
+                        <span class="code-tag">return</span> (
+                          <span class="code-tag">&lt;div&gt;</span>
+                            <span class="code-tag">&lt;Welcome</span> <span class="code-tag">/&gt;</span>
+                          <span class="code-tag">&lt;/div&gt;</span>
+                        );
+                      }
+                    }
+                </div>
+
+                <h3><i class="fas fa-cogs"></i> Component Types</h3>
+                <ul>
+                    <li><strong>Functional Components</strong>: Simple functions that return JSX</li>
+                    <li><strong>Class Components</strong>: ES6 classes that extend React.Component</li>
+                    <li><strong>Presentational Components</strong>: Focus on how things look</li>
+                    <li><strong>Container Components</strong>: Focus on how things work</li>
+                    <li><strong>Higher-Order Components</strong>: Functions that take a component and return a new component</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h2>React Props</h2>
+                </div>
+
+                <p>Props (short for properties) are how components talk to each other. They are read-only and passed from parent to child components.</p>
+
+                <h3><i class="fas fa-code"></i> Passing Props</h3>
+                <div class="code-block">
+                    <span class="code-comment">// Functional component with props</span>
+                    <span class="code-tag">function</span> <span class="code-attr">Welcome</span>(<span class="code-attr">props</span>) {
+                      <span class="code-tag">return</span> <span class="code-tag">&lt;h1&gt;</span>Hello, {props.name}<span class="code-tag">&lt;/h1&gt;</span>;
+                    }
+
+                    <span class="code-comment">// Using the component with props</span>
+                    <span class="code-tag">function</span> <span class="code-attr">App</span>() {
+                      <span class="code-tag">return</span> (
+                        <span class="code-tag">&lt;div&gt;</span>
+                          <span class="code-tag">&lt;Welcome</span> <span class="code-attr">name=</span><span class="code-value">"Sarah"</span> <span class="code-tag">/&gt;</span>
+                          <span class="code-tag">&lt;Welcome</span> <span class="code-attr">name=</span><span class="code-value">"John"</span> <span class="code-tag">/&gt;</span>
+                        <span class="code-tag">&lt;/div&gt;</span>
+                      );
+                    }
+                </div>
+
+                <h3><i class="fas fa-code"></i> Props with Class Components</h3>
+                <div class="code-block">
+                    <span class="code-comment">// Class component with props</span>
+                    <span class="code-tag">class</span> <span class="code-attr">Welcome</span> <span class="code-tag">extends</span> React.<span class="code-attr">Component</span> {
+                      <span class="code-attr">render</span>() {
+                        <span class="code-tag">return</span> <span class="code-tag">&lt;h1&gt;</span>Hello, {this.props.name}<span class="code-tag">&lt;/h1&gt;</span>;
+                      }
+                    }
+
+                    <span class="code-comment">// Using the component</span>
+                    <span class="code-tag">class</span> <span class="code-attr">App</span> <span class="code-tag">extends</span> React.<span class="code-attr">Component</span> {
+                      <span class="code-attr">render</span>() {
+                        <span class="code-tag">return</span> (
+                          <span class="code-tag">&lt;div&gt;</span>
+                            <span class="code-tag">&lt;Welcome</span> <span class="code-attr">name=</span><span class="code-value">"Sarah"</span> <span class="code-tag">/&gt;</span>
+                            <span class="code-tag">&lt;Welcome</span> <span class="code-attr">name=</span><span class="code-value">"John"</span> <span class="code-tag">/&gt;</span>
+                          <span class="code-tag">&lt;/div&gt;</span>
+                        );
+                      }
+                    }
+                </div>
+
+                <h3><i class="fas fa-cogs"></i> Key Props Concepts</h3>
+                <ul>
+                    <li><strong>Props are read-only</strong>: Components should never modify their own props</li>
+                    <li><strong>Default props</strong>: Provide default values for props</li>
+                    <li><strong>PropTypes</strong>: Type checking for props</li>
+                    <li><strong>Children prop</strong>: Access content between component tags</li>
+                    <li><strong>Destructuring props</strong>: Cleaner way to access props</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-star"></i>
+                <h2>Best Practices</h2>
+            </div>
+
+            <div class="practice-grid">
+                <div class="practice-card">
+                    <h4><i class="fas fa-cube"></i> Component Design</h4>
+                    <p>Create small, focused components that do one thing well. Follow the Single Responsibility Principle.</p>
+                </div>
+
+                <div class="practice-card">
+                    <h4><i class="fas fa-tag"></i> Prop Naming</h4>
+                    <p>Use descriptive names for props. Prefix boolean props with "is" or "has" (e.g., isActive).</p>
+                </div>
+
+                <div class="practice-card">
+                    <h4><i class="fas fa-lock"></i> Immutable Props</h4>
+                    <p>Never mutate props directly. Use state for data that changes over time.</p>
+                </div>
+
+                <div class="practice-card">
+                    <h4><i class="fas fa-check-circle"></i> PropTypes</h4>
+                    <p>Use PropTypes to validate props and catch errors during development.</p>
+                </div>
+
+                <div class="practice-card">
+                    <h4><i class="fas fa-sort-alpha-down"></i> Destructuring</h4>
+                    <p>Destructure props at the top of your component for cleaner code.</p>
+                </div>
+
+                <div class="practice-card">
+                    <h4><i class="fas fa-project-diagram"></i> Component Composition</h4>
+                    <p>Prefer composition over inheritance for code reuse and flexibility.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-laptop-code"></i>
+                <h2>Mini Project: User Profile Cards</h2>
+            </div>
+
+            <div id="user-profile-app" class="user-profile-app"></div>
+        </div>
+
+        <div class="best-practices">
+            <div class="card-header">
+                <i class="fas fa-lightbulb"></i>
+                <h2>Advanced Concepts</h2>
+            </div>
+
+            <h3><i class="fas fa-code"></i> Default Props</h3>
+            <div class="code-block">
+                <span class="code-comment">// Setting default props</span>
+                <span class="code-tag">function</span> <span class="code-attr">Welcome</span>(<span class="code-attr">props</span>) {
+                  <span class="code-tag">return</span> <span class="code-tag">&lt;h1&gt;</span>Hello, {props.name}<span class="code-tag">&lt;/h1&gt;</span>;
+                }
+
+                <span class="code-attr">Welcome</span>.<span class="code-attr">defaultProps</span> = {
+                  <span class="code-attr">name</span>: <span class="code-value">'Guest'</span>
+                };
+
+                <span class="code-comment">// Using without name prop</span>
+                <span class="code-tag">&lt;Welcome</span> <span class="code-tag">/&gt;</span> <span class="code-comment">// Renders "Hello, Guest"</span>
+            </div>
+
+            <h3><i class="fas fa-code"></i> PropTypes</h3>
+            <div class="code-block">
+                <span class="code-comment">// Import PropTypes</span>
+                <span class="code-tag">import</span> PropTypes <span class="code-tag">from</span> <span class="code-value">'prop-types'</span>;
+
+                <span class="code-tag">function</span> <span class="code-attr">UserCard</span>(<span class="code-attr">props</span>) {
+                  <span class="code-comment">// Component implementation</span>
+                }
+
+                <span class="code-attr">UserCard</span>.<span class="code-attr">propTypes</span> = {
+                  <span class="code-attr">name</span>: PropTypes.<span class="code-attr">string</span>.<span class="code-attr">isRequired</span>,
+                  <span class="code-attr">age</span>: PropTypes.<span class="code-attr">number</span>,
+                  <span class="code-attr">email</span>: PropTypes.<span class="code-attr">string</span>.<span class="code-attr">isRequired</span>,
+                  <span class="code-attr">isAdmin</span>: PropTypes.<span class="code-attr">bool</span>
+                };
+            </div>
+
+            <h3><i class="fas fa-code"></i> Children Prop</h3>
+            <div class="code-block">
+                <span class="code-comment">// Component using children prop</span>
+                <span class="code-tag">function</span> <span class="code-attr">Card</span>(<span class="code-attr">props</span>) {
+                  <span class="code-tag">return</span> (
+                    <span class="code-tag">&lt;div</span> <span class="code-attr">className=</span><span class="code-value">"card"</span><span class="code-tag">&gt;</span>
+                      {props.children}
+                    <span class="code-tag">&lt;/div&gt;</span>
+                  );
+                }
+
+                <span class="code-comment">// Using the Card component</span>
+                <span class="code-tag">&lt;Card&gt;</span>
+                  <span class="code-tag">&lt;h2&gt;</span>Card Title<span class="code-tag">&lt;/h2&gt;</span>
+                  <span class="code-tag">&lt;p&gt;</span>Card content goes here<span class="code-tag">&lt;/p&gt;</span>
+                <span class="code-tag">&lt;/Card&gt;</span>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>React Components & Props Guide</strong> | Created with React, HTML5 and CSS3</p>
+            <p>Mastering components and props is essential for building scalable React applications!</p>
+        </footer>
+    </div>
+
+    <!-- Babel script for JSX transformation -->
+    <script type="text/babel">
+        // UserCard Component
+        function UserCard({ user }) {
+            return (
+                <div className="user-card">
+                    <div className="user-header">
+                        <img src={user.avatar} alt={user.name} className="user-avatar" />
+                        <h2 className="user-name">{user.name}</h2>
+                        <p className="user-title">{user.title}</p>
+                    </div>
+                    <div className="user-body">
+                        <div className="user-info">
+                            <div className="info-item">
+                                <i className="fas fa-envelope"></i>
+                                <span>{user.email}</span>
+                            </div>
+                            <div className="info-item">
+                                <i className="fas fa-map-marker-alt"></i>
+                                <span>{user.location}</span>
+                            </div>
+                            <div className="info-item">
+                                <i className="fas fa-briefcase"></i>
+                                <span>{user.company}</span>
+                            </div>
+                        </div>
+
+                        <div className="skills-container">
+                            <h4>Skills:</h4>
+                            {user.skills.map((skill, index) => (
+                                <span key={index} className="skill-tag">{skill}</span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // UserProfileApp Component
+        function UserProfileApp() {
+            // Sample user data
+            const users = [
+                {
+                    id: 1,
+                    name: "Prince Tiwari",
+                    title: "Software Developer",
+                    email: "tiwariprince340@gmail.com",
+                    location: "Greater Noida, UP",
+                    company: "Tech Innovations Inc.",
+                    avatar: "Profile.jpeg",
+                    skills: ["React", "JavaScript", "CSS", "HTML5", "Redux"]
+                },
+                {
+                    id: 2,
+                    name: "Prince Tiwari",
+                    title: "UX Designer",
+                    email: "tiwariprince340@gmail.com",
+                    location: "Greater Noida, UP",
+                    company: "Creative Solutions LLC",
+                    avatar: "Profile.jpeg",
+                    skills: ["Figma", "UI Design", "User Research", "Prototyping"]
+                },
+                {
+                    id: 3,
+                    name: "Prince Tiwari",
+                    title: "Full Stack Developer",
+                    email: "tiwariprince340@gmail.com",
+                    location: "Greater Noida, UP",
+                    company: "WebCraft Studios",
+                    avatar: "Profile.jpeg",
+                    skills: ["Node.js", "Express", "MongoDB", "React", "AWS"]
+                },
+                {
+                    id: 4,
+                    name: "Ankite kr Singh",
+                    title: "DevOps Engineer",
+                    email: "AniketSingh@gmail.com",
+                    location: "Greater Noida, UP",
+                    company: "Cloud Systems Inc.",
+                    avatar: "car.jpg",
+                    skills: ["Docker", "Kubernetes", "CI/CD", "AWS", "Linux"]
+                }
+            ];
+
+            return (
+                <div className="user-profile-app">
+                    <h2 style={{textAlign: 'center', marginBottom: '20px', color: 'var(--secondary)'}}>
+                        User Profiles
+                    </h2>
+
+                    <div className="filters">
+                        <button className="filter-btn active">All Users</button>
+                        <button className="filter-btn">Developers</button>
+                        <button className="filter-btn">Designers</button>
+                        <button className="filter-btn">Engineers</button>
+                    </div>
+
+                    <div className="user-grid">
+                        {users.map(user => (
+                            <UserCard key={user.id} user={user} />
+                        ))}
+                    </div>
+
+                    <div style={{marginTop: '30px', textAlign: 'center'}}>
+                        <p>This mini project demonstrates React components and props in action.</p>
+                        <p>Each user card is rendered using the same component with different props.</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        const rootElement = document.getElementById('user-profile-app');
+        ReactDOM.render(<UserProfileApp />, rootElement);
+    </script>
+</body>
+</html>

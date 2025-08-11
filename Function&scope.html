@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Functions & Scope: Complete Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --function: #9b59b6;
+            --global-scope: #e74c3c;
+            --function-scope: #3498db;
+            --block-scope: #2ecc71;
+            --closure: #f39c12;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--function), var(--accent), var(--success));
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--function);
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--function);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--function);
+        }
+
+        .section-header i {
+            background: var(--function);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--function);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            background: var(--function);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--function);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "JS";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--function);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .code-keyword {
+            color: #f6ad55;
+        }
+
+        .code-function {
+            color: #63b3ed;
+        }
+
+        .code-variable {
+            color: #68d391;
+        }
+
+        .code-value {
+            color: #ecc94b;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 2px solid var(--function);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .card h4 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h4 i {
+            color: var(--function);
+        }
+
+        .visualization {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .scope-level {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .global-scope {
+            background: var(--global-scope);
+        }
+
+        .function-scope {
+            background: var(--function-scope);
+            margin-left: 30px;
+        }
+
+        .block-scope {
+            background: var(--block-scope);
+            margin-left: 60px;
+        }
+
+        .closure-scope {
+            background: var(--closure);
+            margin-left: 30px;
+        }
+
+        .variable {
+            padding: 8px 15px;
+            background: white;
+            border-radius: 20px;
+            margin: 0 5px;
+            color: #2c3e50;
+            display: inline-block;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .interactive-area {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background: var(--function);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2d3748;
+            color: white;
+            border-radius: 8px;
+            min-height: 100px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .closure-demo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .counter-box {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            color: #2c3e50;
+            border-radius: 8px;
+            min-width: 150px;
+        }
+
+        .counter-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .counter-label {
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        .info-card {
+            background: #e3f2fd;
+            border-left: 4px solid var(--function);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-card h4 {
+            color: var(--function);
+            margin-bottom: 10px;
+        }
+
+        .scope-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .scope-box {
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            position: relative;
+        }
+
+        .scope-box.global {
+            background: var(--global-scope);
+        }
+
+        .scope-box.function {
+            background: var(--function-scope);
+            margin-left: 40px;
+        }
+
+        .scope-box.block {
+            background: var(--block-scope);
+            margin-left: 80px;
+        }
+
+        .scope-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scope-vars {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tab-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .closure-demo {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .scope-box {
+                margin-left: 20px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .section-header i {
+                margin-bottom: 15px;
+            }
+
+            .scope-level {
+                margin-left: 10px !important;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-code"></i> JavaScript Functions & Scope</h1>
+            <p class="tagline">Master the building blocks of JavaScript programming</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="functions">
+                <i class="fas fa-code"></i> Functions
+            </button>
+            <button class="tab-btn" data-tab="scope">
+                <i class="fas fa-box"></i> Scope
+            </button>
+            <button class="tab-btn" data-tab="closures">
+                <i class="fas fa-lock"></i> Closures
+            </button>
+            <button class="tab-btn" data-tab="practice">
+                <i class="fas fa-laptop-code"></i> Practice
+            </button>
+        </div>
+
+        <div id="functions" class="content-section active">
+            <div class="section-header">
+                <i class="fas fa-code"></i>
+                <h2>JavaScript Functions</h2>
+            </div>
+
+            <p>Functions are reusable blocks of code that perform a specific task. They are fundamental building blocks in JavaScript, allowing you to encapsulate logic, avoid repetition, and create modular code.</p>
+
+            <div class="info-card">
+                <h4><i class="fas fa-lightbulb"></i> Key Concepts</h4>
+                <p>Functions can be declared in several ways: function declarations, function expressions, and arrow functions. Each has its own characteristics regarding hoisting, <code>this</code> binding, and syntax.</p>
+            </div>
+
+            <h3><i class="fas fa-star"></i> Function Types</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-file-signature"></i> Function Declaration</h4>
+                    <p>Declared using the <code>function</code> keyword. Hoisted to the top of their scope.</p>
+                    <div class="code-block">
+                        <span class="code-keyword">function</span> <span class="code-function">calculateArea</span>(width, height) {
+                        &nbsp;&nbsp;<span class="code-keyword">return</span> width * height;
+                        }
+                        <br>
+                        <span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">calculateArea</span>(<span class="code-value">5</span>, <span class="code-value">10</span>)); <span class="code-comment">// 50</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-equals"></i> Function Expression</h4>
+                    <p>Assigned to a variable. Not hoisted like declarations.</p>
+                    <div class="code-block">
+                        <span class="code-keyword">const</span> <span class="code-variable">calculateArea</span> = <span class="code-keyword">function</span>(width, height) {
+                        &nbsp;&nbsp;<span class="code-keyword">return</span> width * height;
+                        };
+                        <br>
+                        <span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-variable">calculateArea</span>(<span class="code-value">5</span>, <span class="code-value">10</span>)); <span class="code-comment">// 50</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-arrow-right"></i> Arrow Function</h4>
+                    <p>Shorter syntax, no <code>this</code> binding. Great for callbacks.</p>
+                    <div class="code-block">
+                        <span class="code-keyword">const</span> <span class="code-variable">calculateArea</span> = (width, height) => width * height;
+                        <br>
+                        <span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-variable">calculateArea</span>(<span class="code-value">5</span>, <span class="code-value">10</span>)); <span class="code-comment">// 50</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h4><i class="fas fa-info-circle"></i> Parameters vs Arguments</h4>
+                <p><strong>Parameters</strong> are variables listed in the function definition. <strong>Arguments</strong> are the actual values passed to the function when it is called.</p>
+            </div>
+
+            <h3><i class="fas fa-exchange-alt"></i> Parameters & Arguments</h3>
+            <div class="interactive-area">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="param-name">Parameter Name:</label>
+                        <input type="text" id="param-name" value="name">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="arg-value">Argument Value:</label>
+                        <input type="text" id="arg-value" value="John">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="func-type">Function Type:</label>
+                        <select id="func-type">
+                            <option value="declaration">Declaration</option>
+                            <option value="expression">Expression</option>
+                            <option value="arrow">Arrow</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="generate-func">
+                            <i class="fas fa-play"></i> Generate & Execute
+                        </button>
+                    </div>
+                </div>
+
+                <div class="code-block" id="func-output">
+                    <span class="code-keyword">function</span> <span class="code-function">greet</span>(name) {
+                    &nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-value">`Hello, ${name}!`</span>;
+                    }
+                    <br>
+                    <span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">greet</span>(<span class="code-value">'John'</span>));
+                </div>
+
+                <div class="output" id="func-result">
+                    // Output will appear here
+                </div>
+            </div>
+        </div>
+
+        <div id="scope" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-box"></i>
+                <h2>Scope in JavaScript</h2>
+            </div>
+
+            <p>Scope determines the accessibility (visibility) of variables. JavaScript has three types of scope: global scope, function scope, and block scope (introduced with ES6).</p>
+
+            <div class="scope-diagram">
+                <div class="scope-box global">
+                    <div class="scope-title">
+                        <i class="fas fa-globe"></i> Global Scope
+                    </div>
+                    <div class="scope-vars">
+                        <div class="variable">globalVar</div>
+                    </div>
+                    <p>Accessible everywhere in your code</p>
+                </div>
+
+                <div class="scope-box function">
+                    <div class="scope-title">
+                        <i class="fas fa-code"></i> Function Scope
+                    </div>
+                    <div class="scope-vars">
+                        <div class="variable">functionVar</div>
+                    </div>
+                    <p>Accessible only within the function</p>
+                </div>
+
+                <div class="scope-box block">
+                    <div class="scope-title">
+                        <i class="fas fa-cube"></i> Block Scope
+                    </div>
+                    <div class="scope-vars">
+                        <div class="variable">blockVar</div>
+                    </div>
+                    <p>Accessible only within the block (if, for, while, etc.)</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <span class="code-keyword">const</span> <span class="code-variable">globalVar</span> = <span class="code-value">'Global'</span>; <span class="code-comment">// Global scope</span>
+                <br><br>
+                <span class="code-keyword">function</span> <span class="code-function">exampleFunction</span>() {
+                &nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-variable">functionVar</span> = <span class="code-value">'Function'</span>; <span class="code-comment">// Function scope</span>
+                <br>
+                &nbsp;&nbsp;<span class="code-keyword">if</span> (<span class="code-keyword">true</span>) {
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-variable">blockVar</span> = <span class="code-value">'Block'</span>; <span class="code-comment">// Block scope</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-variable">console</span>.<span class="code-function">log</span>(globalVar); <span class="code-comment">// Accessible</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-variable">console</span>.<span class="code-function">log</span>(functionVar); <span class="code-comment">// Accessible</span>
+                &nbsp;&nbsp;}
+                <br>
+                &nbsp;&nbsp;<span class="code-comment">// console.log(blockVar); // Error - not accessible</span>
+                }
+                <br>
+                <span class="code-function">exampleFunction</span>();
+                <span class="code-variable">console</span>.<span class="code-function">log</span>(globalVar); <span class="code-comment">// Accessible</span>
+                <span class="code-comment">// console.log(functionVar); // Error - not accessible</span>
+            </div>
+
+            <div class="info-card">
+                <h4><i class="fas fa-exclamation-triangle"></i> Variable Shadowing</h4>
+                <p>When a variable in a local scope uses the same name as a variable in an outer scope, it "shadows" the outer variable. The inner variable takes precedence within its scope.</p>
+            </div>
+
+            <h3><i class="fas fa-exchange-alt"></i> Scope Chain & Access</h3>
+            <div class="interactive-area">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="var-name">Variable Name:</label>
+                        <input type="text" id="var-name" value="message">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="scope-level">Scope Level:</label>
+                        <select id="scope-level">
+                            <option value="global">Global</option>
+                            <option value="function">Function</option>
+                            <option value="block">Block</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="access-test">
+                            <i class="fas fa-search"></i> Test Access
+                        </button>
+                    </div>
+                </div>
+
+                <div class="code-block" id="scope-code">
+                    <span class="code-keyword">const</span> <span class="code-variable">globalMessage</span> = <span class="code-value">'Global message'</span>;
+                    <br><br>
+                    <span class="code-keyword">function</span> <span class="code-function">testScope</span>() {
+                    &nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-variable">functionMessage</span> = <span class="code-value">'Function message'</span>;
+                    <br>
+                    &nbsp;&nbsp;<span class="code-keyword">if</span> (<span class="code-keyword">true</span>) {
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-variable">blockMessage</span> = <span class="code-value">'Block message'</span>;
+                    &nbsp;&nbsp;}
+                    }
+                </div>
+
+                <div class="output" id="scope-result">
+                    // Access test results will appear here
+                </div>
+            </div>
+        </div>
+
+        <div id="closures" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-lock"></i>
+                <h2>Closures</h2>
+            </div>
+
+            <p>A closure is a function that remembers its outer variables and can access them. In JavaScript, all functions are naturally closures.</p>
+
+            <div class="scope-diagram">
+                <div class="scope-box global">
+                    <div class="scope-title">
+                        <i class="fas fa-globe"></i> Global Scope
+                    </div>
+                    <div class="scope-vars">
+                        <div class="variable">createCounter</div>
+                    </div>
+                </div>
+
+                <div class="scope-box function">
+                    <div class="scope-title">
+                        <i class="fas fa-code"></i> Closure Scope
+                    </div>
+                    <div class="scope-vars">
+                        <div class="variable">count</div>
+                        <div class="variable">counter</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <span class="code-keyword">function</span> <span class="code-function">createCounter</span>() {
+                &nbsp;&nbsp;<span class="code-keyword">let</span> <span class="code-variable">count</span> = <span class="code-value">0</span>; <span class="code-comment">// Local variable</span>
+                <br>
+                &nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-keyword">function</span>() {
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-variable">count</span>++; <span class="code-comment">// Accesses count from outer function</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-variable">count</span>;
+                &nbsp;&nbsp;};
+                }
+                <br><br>
+                <span class="code-keyword">const</span> <span class="code-variable">counter</span> = <span class="code-function">createCounter</span>();
+                <span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-variable">counter</span>()); <span class="code-comment">// 1</span>
+                <span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-variable">counter</span>()); <span class="code-comment">// 2</span>
+            </div>
+
+            <div class="info-card">
+                <h4><i class="fas fa-key"></i> Why Closures Matter</h4>
+                <p>Closures are essential for:</p>
+                <ul>
+                    <li>Data encapsulation and privacy</li>
+                    <li>Creating function factories</li>
+                    <li>Implementing modules in JavaScript</li>
+                    <li>Event handlers and callbacks</li>
+                </ul>
+            </div>
+
+            <h3><i class="fas fa-cogs"></i> Closure in Action</h3>
+            <div class="closure-demo">
+                <div class="counter-box">
+                    <div class="counter-value" id="counter-value">0</div>
+                    <div class="counter-label">Counter Value</div>
+                </div>
+
+                <div>
+                    <button id="increment-btn" class="tab-btn">
+                        <i class="fas fa-plus"></i> Increment Counter
+                    </button>
+                    <p class="mt-3">Each click remembers and updates the counter value</p>
+                </div>
+
+                <div class="counter-box">
+                    <div class="counter-value" id="private-value">0</div>
+                    <div class="counter-label">Private Counter</div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-lock"></i> Data Privacy with Closures</h3>
+            <div class="interactive-area">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="private-data">Private Data:</label>
+                        <input type="text" id="private-data" value="Secret Information">
+                    </div>
+
+                    <div class="control-group">
+                        <button id="create-closure">
+                            <i class="fas fa-lock"></i> Create Closure
+                        </button>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="access-data">
+                            <i class="fas fa-unlock"></i> Access Data
+                        </button>
+                    </div>
+                </div>
+
+                <div class="output" id="closure-result">
+                    // Closure results will appear here
+                </div>
+            </div>
+        </div>
+
+        <div id="practice" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-laptop-code"></i>
+                <h2>Practice Area</h2>
+            </div>
+
+            <p>Test your understanding of functions and scope with these interactive exercises.</p>
+
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-calculator"></i> Function Challenge</h4>
+                    <p>Create a function that calculates the factorial of a number.</p>
+                    <div class="code-block">
+                        <span class="code-keyword">function</span> <span class="code-function">factorial</span>(n) {
+                        &nbsp;&nbsp;<span class="code-comment">// Your code here</span>
+                        }
+                    </div>
+                    <div class="controls">
+                        <input type="number" id="factorial-input" placeholder="Enter a number" value="5">
+                        <button id="calculate-factorial">Calculate</button>
+                    </div>
+                    <div class="output" id="factorial-output"></div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-sort-amount-up"></i> Scope Challenge</h4>
+                    <p>Predict the output of this code:</p>
+                    <div class="code-block">
+                        <span class="code-keyword">let</span> <span class="code-variable">x</span> = <span class="code-value">10</span>;
+                        <br>
+                        <span class="code-keyword">function</span> <span class="code-function">outer</span>() {
+                        &nbsp;&nbsp;<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-variable">x</span>);
+                        &nbsp;&nbsp;<span class="code-keyword">let</span> <span class="code-variable">x</span> = <span class="code-value">20</span>;
+                        }
+                        <br>
+                        <span class="code-function">outer</span>();
+                    </div>
+                    <div class="controls">
+                        <select id="scope-quiz">
+                            <option value="">Select an answer</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="undefined">undefined</option>
+                            <option value="error">ReferenceError</option>
+                        </select>
+                        <button id="check-scope">Check Answer</button>
+                    </div>
+                    <div class="output" id="scope-quiz-result"></div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-code"></i> Closure Challenge</h3>
+            <div class="card">
+                <p>Create a function that generates multiplier functions:</p>
+                <div class="code-block">
+                    <span class="code-keyword">function</span> <span class="code-function">createMultiplier</span>(factor) {
+                    &nbsp;&nbsp;<span class="code-comment">// Return a function that multiplies</span>
+                    &nbsp;&nbsp;<span class="code-comment">// its input by the factor</span>
+                    }
+                    <br>
+                    <span class="code-keyword">const</span> <span class="code-variable">double</span> = <span class="code-function">createMultiplier</span>(<span class="code-value">2</span>);
+                    <span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">double</span>(<span class="code-value">5</span>)); <span class="code-comment">// Should output 10</span>
+                </div>
+                <div class="controls">
+                    <input type="number" id="multiplier-input" placeholder="Enter a number" value="7">
+                    <button id="test-multiplier">Test Multiplier</button>
+                </div>
+                <div class="output" id="multiplier-output"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>JavaScript Functions & Scope Guide</strong> | Created with HTML5, CSS3, and JavaScript</p>
+            <p>Master these concepts to become a JavaScript expert!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and sections
+                tabBtns.forEach(b => b.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // Add active class to clicked button
+                btn.classList.add('active');
+
+                // Show corresponding section
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Function generator
+        const generateFuncBtn = document.getElementById('generate-func');
+        const funcOutput = document.getElementById('func-output');
+        const funcResult = document.getElementById('func-result');
+
+        generateFuncBtn.addEventListener('click', () => {
+            const paramName = document.getElementById('param-name').value || 'name';
+            const argValue = document.getElementById('arg-value').value || 'John';
+            const funcType = document.getElementById('func-type').value;
+
+            let funcCode = '';
+            let callCode = '';
+
+            switch(funcType) {
+                case 'declaration':
+                    funcCode = `function greet(${paramName}) {\n  return \`Hello, \${${paramName}}!\`;\n}`;
+                    callCode = `greet('${argValue}');`;
+                    break;
+                case 'expression':
+                    funcCode = `const greet = function(${paramName}) {\n  return \`Hello, \${${paramName}}!\`;\n};`;
+                    callCode = `greet('${argValue}');`;
+                    break;
+                case 'arrow':
+                    funcCode = `const greet = (${paramName}) => \`Hello, \${${paramName}}!\`;`;
+                    callCode = `greet('${argValue}');`;
+                    break;
+            }
+
+            // Update code display
+            funcOutput.innerHTML = `<span class="code-keyword">${funcCode}</span>
+<span class="code-variable">console</span>.<span class="code-function">log</span>(${callCode});`;
+
+            // Execute and show result
+            try {
+                let result;
+                if (funcType === 'declaration') {
+                    eval(funcCode);
+                    result = eval(callCode);
+                } else {
+                    result = eval(`${funcCode} ${callCode}`);
+                }
+                funcResult.textContent = `// Output: ${result}`;
+            } catch (e) {
+                funcResult.textContent = `// Error: ${e.message}`;
+            }
+        });
+
+        // Scope access test
+        const accessTestBtn = document.getElementById('access-test');
+        const scopeResult = document.getElementById('scope-result');
+
+        accessTestBtn.addEventListener('click', () => {
+            const varName = document.getElementById('var-name').value || 'message';
+            const scopeLevel = document.getElementById('scope-level').value;
+
+            // Create variables in different scopes
+            let globalVar = 'Global value';
+
+            function testFunction() {
+                let functionVar = 'Function value';
+
+                if (true) {
+                    let blockVar = 'Block value';
+                }
+            }
+
+            testFunction();
+
+            let result;
+            try {
+                switch(scopeLevel) {
+                    case 'global':
+                        result = eval(varName);
+                        break;
+                    case 'function':
+                        result = functionVar;
+                        break;
+                    case 'block':
+                        result = blockVar;
+                        break;
+                }
+                scopeResult.textContent = `Access successful! Value: ${result}`;
+            } catch (e) {
+                scopeResult.textContent = `Error: ${e.message}`;
+            }
+        });
+
+        // Closure counter
+        let counter = (function() {
+            let count = 0;
+            return function() {
+                count++;
+                return count;
+            };
+        })();
+
+        const counterValue = document.getElementById('counter-value');
+        const incrementBtn = document.getElementById('increment-btn');
+
+        incrementBtn.addEventListener('click', () => {
+            counterValue.textContent = counter();
+        });
+
+        // Private data with closure
+        let getPrivateData;
+        const createClosureBtn = document.getElementById('create-closure');
+        const accessDataBtn = document.getElementById('access-data');
+        const closureResult = document.getElementById('closure-result');
+        const privateValue = document.getElementById('private-value');
+
+        createClosureBtn.addEventListener('click', () => {
+            const data = document.getElementById('private-data').value;
+
+            // Create closure
+            getPrivateData = (function(secret) {
+                let privateCounter = 0;
+
+                return function() {
+                    privateCounter++;
+                    privateValue.textContent = privateCounter;
+                    return `Accessed ${privateCounter} times. Secret: ${secret}`;
+                };
+            })(data);
+
+            closureResult.textContent = "Closure created! Now try accessing the data.";
+        });
+
+        accessDataBtn.addEventListener('click', () => {
+            if (typeof getPrivateData === 'function') {
+                closureResult.textContent = getPrivateData();
+            } else {
+                closureResult.textContent = "Create a closure first!";
+            }
+        });
+
+        // Practice area
+        // Factorial challenge
+        const calculateFactorial = document.getElementById('calculate-factorial');
+        const factorialOutput = document.getElementById('factorial-output');
+
+        calculateFactorial.addEventListener('click', () => {
+            const num = parseInt(document.getElementById('factorial-input').value);
+
+            if (isNaN(num) || num < 0) {
+                factorialOutput.textContent = "Please enter a valid positive number";
+                return;
+            }
+
+            // Using recursion for factorial
+            function factorial(n) {
+                if (n === 0 || n === 1) return 1;
+                return n * factorial(n - 1);
+            }
+
+            factorialOutput.textContent = `${num}! = ${factorial(num)}`;
+        });
+
+        // Scope quiz
+        const checkScopeBtn = document.getElementById('check-scope');
+        const scopeQuizResult = document.getElementById('scope-quiz-result');
+
+        checkScopeBtn.addEventListener('click', () => {
+            const answer = document.getElementById('scope-quiz').value;
+
+            if (answer === "error") {
+                scopeQuizResult.textContent = "Correct! This would throw a ReferenceError due to the temporal dead zone.";
+            } else {
+                scopeQuizResult.textContent = "Incorrect. The correct answer is that it throws a ReferenceError.";
+            }
+        });
+
+        // Multiplier challenge
+        const testMultiplierBtn = document.getElementById('test-multiplier');
+        const multiplierOutput = document.getElementById('multiplier-output');
+
+        testMultiplierBtn.addEventListener('click', () => {
+            const num = parseInt(document.getElementById('multiplier-input').value);
+
+            if (isNaN(num)) {
+                multiplierOutput.textContent = "Please enter a valid number";
+                return;
+            }
+
+            // Solution to the challenge
+            function createMultiplier(factor) {
+                return function(x) {
+                    return x * factor;
+                };
+            }
+
+            const double = createMultiplier(2);
+            const triple = createMultiplier(3);
+            const quadruple = createMultiplier(4);
+
+            multiplierOutput.textContent =
+                `Double of ${num} is ${double(num)}\n` +
+                `Triple of ${num} is ${triple(num)}\n` +
+                `Quadruple of ${num} is ${quadruple(num)}`;
+        });
+    </script>
+</body>
+</html>

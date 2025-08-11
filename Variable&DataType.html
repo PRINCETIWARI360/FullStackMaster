@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Variables & Data Types</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --purple: #9b59b6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--success));
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .card-header i {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "JavaScript";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        .code-keyword {
+            color: #63b3ed;
+        }
+
+        .code-string {
+            color: #68d391;
+        }
+
+        .code-number {
+            color: #f6ad55;
+        }
+
+        .data-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .data-type-card {
+            background: #f8f9fa;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-type-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            background: #e9ecef;
+            border-color: var(--accent);
+        }
+
+        .data-type-card h4 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .data-type-card h4 i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .interactive-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .interactive-btn {
+            flex: 1;
+            min-width: 200px;
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1.1rem;
+        }
+
+        .interactive-btn:hover {
+            background: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .type-output {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+        }
+
+        .variable-visualization {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .variable-box {
+            background: #f8f9fa;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .variable-name {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .variable-value {
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .variable-type {
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-top: 10px;
+        }
+
+        .playground {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .code-editor {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            min-height: 150px;
+            position: relative;
+        }
+
+        .code-editor:focus {
+            outline: 2px solid var(--primary);
+        }
+
+        .run-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .result-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            min-height: 100px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript Variables & Data Types</h1>
+            <p class="tagline">Master the Fundamentals of JavaScript</p>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-code"></i>
+                    <h2>Variables in JavaScript</h2>
+                </div>
+
+                <p>Variables are containers for storing data values. JavaScript has three ways to declare variables: <code>var</code>, <code>let</code>, and <code>const</code>.</p>
+
+                <h3><i class="fas fa-key"></i> Variable Declaration</h3>
+                <div class="code-block">
+                    <span class="code-comment">// Using var (function-scoped)</span><br>
+                    <span class="code-keyword">var</span> name = <span class="code-string">"John Doe"</span>;<br><br>
+
+                    <span class="code-comment">// Using let (block-scoped)</span><br>
+                    <span class="code-keyword">let</span> age = <span class="code-number">30</span>;<br><br>
+
+                    <span class="code-comment">// Using const (block-scoped, constant)</span><br>
+                    <span class="code-keyword">const</span> PI = <span class="code-number">3.14159</span>;
+                </div>
+
+                <h3><i class="fas fa-sync-alt"></i> Variable Reassignment</h3>
+                <div class="code-block">
+                    <span class="code-keyword">let</span> counter = <span class="code-number">0</span>;<br>
+                    counter = <span class="code-number">1</span>; <span class="code-comment">// Valid reassignment</span><br><br>
+
+                    <span class="code-keyword">const</span> MAX_USERS = <span class="code-number">100</span>;<br>
+                    <span class="code-comment">// MAX_USERS = 200; // Error: Assignment to constant variable</span>
+                </div>
+
+                <div class="variable-visualization">
+                    <div class="variable-box">
+                        <div class="variable-name">name</div>
+                        <div class="variable-value">"John Doe"</div>
+                        <div class="variable-type">string</div>
+                    </div>
+
+                    <div class="variable-box">
+                        <div class="variable-name">age</div>
+                        <div class="variable-value">30</div>
+                        <div class="variable-type">number</div>
+                    </div>
+
+                    <div class="variable-box">
+                        <div class="variable-name">PI</div>
+                        <div class="variable-value">3.14159</div>
+                        <div class="variable-type">number</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-cubes"></i>
+                    <h2>Data Types in JavaScript</h2>
+                </div>
+
+                <p>JavaScript has dynamic types. The same variable can hold different data types. There are 7 primitive data types and 1 complex type.</p>
+
+                <h3><i class="fas fa-list"></i> Primitive Data Types</h3>
+                <div class="data-type-grid">
+                    <div class="data-type-card">
+                        <h4><i class="fas fa-font"></i> String</h4>
+                        <p>Represents textual data</p>
+                        <div class="code-block">
+                            <span class="code-keyword">let</span> text = <span class="code-string">"Hello World"</span>;
+                        </div>
+                    </div>
+
+                    <div class="data-type-card">
+                        <h4><i class="fas fa-hashtag"></i> Number</h4>
+                        <p>Represents numeric values</p>
+                        <div class="code-block">
+                            <span class="code-keyword">let</span> num = <span class="code-number">42</span>;
+                        </div>
+                    </div>
+
+                    <div class="data-type-card">
+                        <h4><i class="fas fa-check-circle"></i> Boolean</h4>
+                        <p>Represents true/false values</p>
+                        <div class="code-block">
+                            <span class="code-keyword">let</span> isActive = <span class="code-keyword">true</span>;
+                        </div>
+                    </div>
+
+                    <div class="data-type-card">
+                        <h4><i class="fas fa-ban"></i> Null</h4>
+                        <p>Represents intentional absence of value</p>
+                        <div class="code-block">
+                            <span class="code-keyword">let</span> empty = <span class="code-keyword">null</span>;
+                        </div>
+                    </div>
+
+                    <div class="data-type-card">
+                        <h4><i class="fas fa-question-circle"></i> Undefined</h4>
+                        <p>Represents uninitialized variables</p>
+                        <div class="code-block">
+                            <span class="code-keyword">let</span> notDefined;
+                        </div>
+                    </div>
+
+                    <div class="data-type-card">
+                        <h4><i class="fas fa-gem"></i> Symbol</h4>
+                        <p>Represents unique identifiers</p>
+                        <div class="code-block">
+                            <span class="code-keyword">const</span> id = <span class="code-keyword">Symbol</span>(<span class="code-string">"id"</span>);
+                        </div>
+                    </div>
+
+                    <div class="data-type-card">
+                        <h4><i class="fas fa-infinity"></i> BigInt</h4>
+                        <p>Represents large integers</p>
+                        <div class="code-block">
+                            <span class="code-keyword">const</span> bigNum = <span class="code-number">12345678901234567890n</span>;
+                        </div>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-object-group"></i> Complex Data Type</h3>
+                <div class="data-type-grid">
+                    <div class="data-type-card">
+                        <h4><i class="fas fa-cube"></i> Object</h4>
+                        <p>Represents collections of key-value pairs</p>
+                        <div class="code-block">
+                            <span class="code-keyword">let</span> person = {<br>
+                            &nbsp;&nbsp;name: <span class="code-string">"John"</span>,<br>
+                            &nbsp;&nbsp;age: <span class="code-number">30</span><br>
+                            };
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-wrench"></i>
+                <h2>Type Conversion & Checking</h2>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h3><i class="fas fa-exchange-alt"></i> Type Conversion</h3>
+                    <p>JavaScript can convert between types automatically (coercion) or manually.</p>
+                    <div class="code-block">
+                        <span class="code-comment">// String to Number</span><br>
+                        <span class="code-keyword">let</span> num = <span class="code-keyword">Number</span>(<span class="code-string">"42"</span>); <span class="code-comment">// 42</span><br><br>
+
+                        <span class="code-comment">// Number to String</span><br>
+                        <span class="code-keyword">let</span> str = <span class="code-number">42</span>.<span class="code-keyword">toString</span>(); <span class="code-comment">// "42"</span><br><br>
+
+                        <span class="code-comment">// Boolean Conversion</span><br>
+                        <span class="code-keyword">let</span> bool = <span class="code-keyword">Boolean</span>(<span class="code-number">1</span>); <span class="code-comment">// true</span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h3><i class="fas fa-search"></i> Type Checking</h3>
+                    <p>Use typeof operator to check the type of a variable.</p>
+                    <div class="code-block">
+                        <span class="code-keyword">typeof</span> <span class="code-string">"Hello"</span>; <span class="code-comment">// "string"</span><br>
+                        <span class="code-keyword">typeof</span> <span class="code-number">42</span>; <span class="code-comment">// "number"</span><br>
+                        <span class="code-keyword">typeof</span> <span class="code-keyword">true</span>; <span class="code-comment">// "boolean"</span><br>
+                        <span class="code-keyword">typeof</span> {}; <span class="code-comment">// "object"</span><br>
+                        <span class="code-keyword">typeof</span> <span class="code-keyword">undefined</span>; <span class="code-comment">// "undefined"</span><br>
+                        <span class="code-keyword">typeof</span> <span class="code-keyword">null</span>; <span class="code-comment">// "object" (historical quirk)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interactive-section">
+                <button class="interactive-btn" onclick="showType('string')">
+                    <i class="fas fa-font"></i> Check String Type
+                </button>
+                <button class="interactive-btn" onclick="showType('number')">
+                    <i class="fas fa-hashtag"></i> Check Number Type
+                </button>
+                <button class="interactive-btn" onclick="showType('object')">
+                    <i class="fas fa-cube"></i> Check Object Type
+                </button>
+            </div>
+
+            <div id="typeOutput" class="type-output">
+                Click a button to see the type
+            </div>
+        </div>
+
+        <div class="playground">
+            <div class="card-header">
+                <i class="fas fa-laptop-code"></i>
+                <h2>JavaScript Playground</h2>
+            </div>
+
+            <p>Try out JavaScript code in the editor below. Click "Run Code" to see the result.</p>
+
+            <div class="code-editor" contenteditable="true" id="jsEditor">
+// Try your JavaScript code here
+let message = "Hello, JavaScript!";
+const PI = 3.14159;
+let isActive = true;
+
+// This will be displayed in the result area
+message;
+            </div>
+
+            <button class="run-btn" onclick="runCode()">
+                <i class="fas fa-play"></i> Run Code
+            </button>
+
+            <div class="result-area" id="resultArea">
+                Results will appear here...
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>JavaScript Variables & Data Types Guide</strong> | Created with HTML5, CSS3, and JavaScript</p>
+            <p>Understanding variables and data types is fundamental to JavaScript mastery!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Type checking demo
+        function showType(type) {
+            let value, typeName;
+
+            switch(type) {
+                case 'string':
+                    value = '"Hello World"';
+                    typeName = typeof "Hello World";
+                    break;
+                case 'number':
+                    value = '42';
+                    typeName = typeof 42;
+                    break;
+                case 'object':
+                    value = '{ name: "John" }';
+                    typeName = typeof { name: "John" };
+                    break;
+                default:
+                    value = 'undefined';
+                    typeName = typeof undefined;
+            }
+
+            document.getElementById('typeOutput').innerHTML =
+                `<span class="code-keyword">typeof</span> ${value} <span class="code-comment">// "${typeName}"</span>`;
+        }
+
+        // JavaScript playground
+        function runCode() {
+            const editor = document.getElementById('jsEditor');
+            const resultArea = document.getElementById('resultArea');
+
+            try {
+                // Get the code from the editor
+                const code = editor.textContent;
+
+                // Create a function to capture console.log output
+                let output = '';
+                const originalLog = console.log;
+                console.log = function(message) {
+                    output += message + '\n';
+                };
+
+                // Evaluate the code
+                const result = eval(code);
+
+                // Restore console.log
+                console.log = originalLog;
+
+                // Display the result
+                if (result !== undefined) {
+                    output += result;
+                }
+
+                if (output) {
+                    resultArea.textContent = output;
+                } else {
+                    resultArea.innerHTML = '<span class="code-comment">// Code executed successfully (no output)</span>';
+                }
+
+                resultArea.style.color = '#333';
+            } catch (error) {
+                resultArea.textContent = error.message;
+                resultArea.style.color = '#e74c3c';
+            }
+        }
+
+        // Add animations to data type cards
+        const cards = document.querySelectorAll('.data-type-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('pulse');
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('pulse');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Animations & Transitions Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --purple: #9b59b6;
+            --animation: #8e44ad;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--animation), var(--accent), var(--success));
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--animation);
+            margin-bottom: 20px;
+            animation: colorPulse 3s infinite;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--animation);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--animation);
+        }
+
+        .section-header i {
+            background: var(--animation);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--animation);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            background: var(--animation);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--animation);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "CSS";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--animation);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        .code-selector {
+            color: #63b3ed;
+        }
+
+        .code-property {
+            color: #f6ad55;
+        }
+
+        .code-value {
+            color: #68d391;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 2px solid var(--animation);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .card h4 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h4 i {
+            color: var(--animation);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .value-display {
+            font-weight: bold;
+            color: var(--animation);
+        }
+
+        .animation-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            margin: 30px 0;
+            background: rgba(236, 240, 241, 0.5);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-box {
+            width: 100px;
+            height: 100px;
+            background: var(--animation);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+        .animation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .animation-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .animation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .animation-preview {
+            width: 120px;
+            height: 120px;
+            background: var(--animation);
+            margin: 0 auto 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .playground {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .preview-area {
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(236, 240, 241, 0.5);
+            border-radius: 10px;
+        }
+
+        .preview-box {
+            width: 100px;
+            height: 100px;
+            background: var(--animation);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+        .transition-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .control-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-item label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        /* Animation keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes colorPulse {
+            0% { color: var(--animation); }
+            50% { color: var(--accent); }
+            100% { color: var(--animation); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(100px); }
+        }
+
+        @keyframes flip {
+            0% { transform: perspective(400px) rotateY(0); }
+            50% { transform: perspective(400px) rotateY(180deg); }
+            100% { transform: perspective(400px) rotateY(360deg); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes rainbow {
+            0% { background-color: #3498db; }
+            25% { background-color: #e74c3c; }
+            50% { background-color: #9b59b6; }
+            75% { background-color: #2ecc71; }
+            100% { background-color: #3498db; }
+        }
+
+        /* Animation classes */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .bounce {
+            animation: bounce 1s infinite;
+        }
+
+        .rotate {
+            animation: rotate 2s linear infinite;
+        }
+
+        .slide {
+            animation: slide 3s ease-in-out infinite alternate;
+        }
+
+        .flip {
+            animation: flip 2s ease-in-out infinite;
+        }
+
+        .shake {
+            animation: shake 0.5s infinite;
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .rainbow {
+            animation: rainbow 4s linear infinite;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            .animation-container {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSS Animations & Transitions</h1>
+            <p class="tagline">Bring Your Web Pages to Life</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="transitions">
+                <i class="fas fa-exchange-alt"></i> Transitions
+            </button>
+            <button class="tab-btn" data-tab="animations">
+                <i class="fas fa-film"></i> Animations
+            </button>
+            <button class="tab-btn" data-tab="playground">
+                <i class="fas fa-play-circle"></i> Animation Playground
+            </button>
+        </div>
+
+        <div id="transitions" class="content-section active">
+            <div class="section-header">
+                <i class="fas fa-exchange-alt"></i>
+                <h2>CSS Transitions</h2>
+            </div>
+
+            <p>CSS transitions allow you to change property values smoothly over a given duration. They provide a way to control animation speed when changing CSS properties.</p>
+
+            <h3><i class="fas fa-sliders-h"></i> Transition Properties</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-list"></i> transition-property</h4>
+                    <p>Specifies the name of the CSS property the transition effect is for</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">transition-property</span>: <span class="code-value">all</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-clock"></i> transition-duration</h4>
+                    <p>Specifies how many seconds or milliseconds a transition effect takes to complete</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">transition-duration</span>: <span class="code-value">0.5s</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-tachometer-alt"></i> transition-timing-function</h4>
+                    <p>Specifies the speed curve of the transition effect</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">transition-timing-function</span>: <span class="code-value">ease-in-out</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-hourglass-half"></i> transition-delay</h4>
+                    <p>Specifies a delay (in seconds) for the transition effect</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">transition-delay</span>: <span class="code-value">0.2s</span>;
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-cogs"></i> Transition Examples</h3>
+            <div class="animation-grid">
+                <div class="animation-card">
+                    <div class="animation-preview demo-transition" data-effect="color">
+                        Hover Me
+                    </div>
+                    <h4>Color Change</h4>
+                </div>
+
+                <div class="animation-card">
+                    <div class="animation-preview demo-transition" data-effect="scale">
+                        Hover Me
+                    </div>
+                    <h4>Scale Effect</h4>
+                </div>
+
+                <div class="animation-card">
+                    <div class="animation-preview demo-transition" data-effect="rotate">
+                        Hover Me
+                    </div>
+                    <h4>Rotation</h4>
+                </div>
+
+                <div class="animation-card">
+                    <div class="animation-preview demo-transition" data-effect="shadow">
+                        Hover Me
+                    </div>
+                    <h4>Shadow Effect</h4>
+                </div>
+            </div>
+
+            <div class="animation-container">
+                <div class="demo-box transition-demo" id="transitionDemo">
+                    Transition Demo
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="property-select">Property:
+                        <select id="property-select" class="slider">
+                            <option value="all">All</option>
+                            <option value="background">Background</option>
+                            <option value="transform">Transform</option>
+                            <option value="border-radius">Border Radius</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="control-group">
+                    <label for="duration-slider">Duration: <span id="duration-value" class="value-display">0.5s</span></label>
+                    <input type="range" id="duration-slider" class="slider" min="0.1" max="2" step="0.1" value="0.5">
+                </div>
+
+                <div class="control-group">
+                    <label for="timing-select">Timing Function:
+                        <select id="timing-select" class="slider">
+                            <option value="ease">ease</option>
+                            <option value="ease-in">ease-in</option>
+                            <option value="ease-out">ease-out</option>
+                            <option value="ease-in-out">ease-in-out</option>
+                            <option value="linear">linear</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="control-group">
+                    <label for="delay-slider">Delay: <span id="delay-value" class="value-display">0s</span></label>
+                    <input type="range" id="delay-slider" class="slider" min="0" max="1" step="0.1" value="0">
+                </div>
+            </div>
+        </div>
+
+        <div id="animations" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-film"></i>
+                <h2>CSS Animations</h2>
+            </div>
+
+            <p>CSS animations make it possible to animate transitions from one CSS style configuration to another. Animations consist of two components: a style describing the CSS animation and a set of keyframes that indicate the start and end states of the animation's style.</p>
+
+            <h3><i class="fas fa-sliders-h"></i> Animation Properties</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-play"></i> animation-name</h4>
+                    <p>Specifies the name of the keyframe animation</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">animation-name</span>: <span class="code-value">slide</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-clock"></i> animation-duration</h4>
+                    <p>Specifies how long an animation should take to complete one cycle</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">animation-duration</span>: <span class="code-value">2s</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-sync-alt"></i> animation-iteration-count</h4>
+                    <p>Specifies the number of times an animation should be played</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">animation-iteration-count</span>: <span class="code-value">infinite</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-directions"></i> animation-direction</h4>
+                    <p>Specifies whether an animation should play forwards, backwards, or alternately</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">animation-direction</span>: <span class="code-value">alternate</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-tachometer-alt"></i> animation-timing-function</h4>
+                    <p>Specifies the speed curve of the animation</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">animation-timing-function</span>: <span class="code-value">ease-in-out</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-hourglass-half"></i> animation-delay</h4>
+                    <p>Specifies a delay before the animation will start</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">animation-delay</span>: <span class="code-value">1s</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-fill"></i> animation-fill-mode</h4>
+                    <p>Specifies what values are applied before/after the animation</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">animation-fill-mode</span>: <span class="code-value">forwards</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-pause"></i> animation-play-state</h4>
+                    <p>Specifies whether the animation is running or paused</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">animation-play-state</span>: <span class="code-value">paused</span>;
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-cogs"></i> Animation Examples</h3>
+            <div class="animation-grid">
+                <div class="animation-card" data-animation="pulse">
+                    <div class="animation-preview pulse">
+                        Pulse
+                    </div>
+                    <h4>Pulse Effect</h4>
+                </div>
+
+                <div class="animation-card" data-animation="bounce">
+                    <div class="animation-preview bounce">
+                        Bounce
+                    </div>
+                    <h4>Bounce Effect</h4>
+                </div>
+
+                <div class="animation-card" data-animation="rotate">
+                    <div class="animation-preview rotate">
+                        Rotate
+                    </div>
+                    <h4>Rotation</h4>
+                </div>
+
+                <div class="animation-card" data-animation="slide">
+                    <div class="animation-preview slide">
+                        Slide
+                    </div>
+                    <h4>Slide</h4>
+                </div>
+
+                <div class="animation-card" data-animation="flip">
+                    <div class="animation-preview flip">
+                        Flip
+                    </div>
+                    <h4>3D Flip</h4>
+                </div>
+
+                <div class="animation-card" data-animation="shake">
+                    <div class="animation-preview shake">
+                        Shake
+                    </div>
+                    <h4>Shake</h4>
+                </div>
+
+                <div class="animation-card" data-animation="float">
+                    <div class="animation-preview float">
+                        Float
+                    </div>
+                    <h4>Float</h4>
+                </div>
+
+                <div class="animation-card" data-animation="rainbow">
+                    <div class="animation-preview rainbow">
+                        Rainbow
+                    </div>
+                    <h4>Color Change</h4>
+                </div>
+            </div>
+
+            <div class="animation-container">
+                <div class="demo-box" id="animationDemo">
+                    Animation Demo
+                </div>
+            </div>
+        </div>
+
+        <div id="playground" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-play-circle"></i>
+                <h2>Animation Playground</h2>
+            </div>
+
+            <p>Customize your own animation and see the results in real-time. Experiment with different properties to create unique effects.</p>
+
+            <div class="playground">
+                <div class="preview-area">
+                    <div class="preview-box" id="playgroundBox">
+                        Animate Me!
+                    </div>
+                </div>
+
+                <div class="transition-controls">
+                    <div class="control-item">
+                        <label for="anim-name">Animation Name</label>
+                        <select id="anim-name" class="slider">
+                            <option value="pulse">Pulse</option>
+                            <option value="bounce">Bounce</option>
+                            <option value="rotate">Rotate</option>
+                            <option value="slide">Slide</option>
+                            <option value="flip">Flip</option>
+                            <option value="shake">Shake</option>
+                            <option value="float">Float</option>
+                            <option value="rainbow">Rainbow</option>
+                        </select>
+                    </div>
+
+                    <div class="control-item">
+                        <label for="anim-duration">Duration: <span id="anim-duration-value">2s</span></label>
+                        <input type="range" id="anim-duration" class="slider" min="0.5" max="5" step="0.5" value="2">
+                    </div>
+
+                    <div class="control-item">
+                        <label for="anim-timing">Timing Function</label>
+                        <select id="anim-timing" class="slider">
+                            <option value="ease">ease</option>
+                            <option value="ease-in">ease-in</option>
+                            <option value="ease-out">ease-out</option>
+                            <option value="ease-in-out">ease-in-out</option>
+                            <option value="linear">linear</option>
+                        </select>
+                    </div>
+
+                    <div class="control-item">
+                        <label for="anim-delay">Delay: <span id="anim-delay-value">0s</span></label>
+                        <input type="range" id="anim-delay" class="slider" min="0" max="2" step="0.1" value="0">
+                    </div>
+
+                    <div class="control-item">
+                        <label for="anim-iteration">Iteration Count</label>
+                        <select id="anim-iteration" class="slider">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="infinite">Infinite</option>
+                        </select>
+                    </div>
+
+                    <div class="control-item">
+                        <label for="anim-direction">Direction</label>
+                        <select id="anim-direction" class="slider">
+                            <option value="normal">Normal</option>
+                            <option value="reverse">Reverse</option>
+                            <option value="alternate">Alternate</option>
+                            <option value="alternate-reverse">Alternate Reverse</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <span class="code-selector">.animated-box</span> {
+                    <span class="code-property">animation-name</span>: <span id="code-name" class="code-value">pulse</span>;
+                    <span class="code-property">animation-duration</span>: <span id="code-duration" class="code-value">2s</span>;
+                    <span class="code-property">animation-timing-function</span>: <span id="code-timing" class="code-value">ease</span>;
+                    <span class="code-property">animation-delay</span>: <span id="code-delay" class="code-value">0s</span>;
+                    <span class="code-property">animation-iteration-count</span>: <span id="code-iteration" class="code-value">infinite</span>;
+                    <span class="code-property">animation-direction</span>: <span id="code-direction" class="code-value">normal</span>;
+                    }
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button id="play-animation" class="tab-btn" style="width: 200px;">
+                        <i class="fas fa-play"></i> Play Animation
+                    </button>
+                    <button id="stop-animation" class="tab-btn" style="width: 200px; background: var(--accent);">
+                        <i class="fas fa-stop"></i> Stop Animation
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>CSS Animations & Transitions Guide</strong> | Created with HTML5, CSS3, and JavaScript</p>
+            <p>Bring your web designs to life with powerful animations!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and sections
+                tabBtns.forEach(b => b.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // Add active class to clicked button
+                btn.classList.add('active');
+
+                // Show corresponding section
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Transition controls
+        const propertySelect = document.getElementById('property-select');
+        const durationSlider = document.getElementById('duration-slider');
+        const timingSelect = document.getElementById('timing-select');
+        const delaySlider = document.getElementById('delay-slider');
+        const durationValue = document.getElementById('duration-value');
+        const delayValue = document.getElementById('delay-value');
+        const transitionDemo = document.getElementById('transitionDemo');
+
+        function updateTransition() {
+            const property = propertySelect.value;
+            const duration = durationSlider.value;
+            const timing = timingSelect.value;
+            const delay = delaySlider.value;
+
+            // Update display values
+            durationValue.textContent = duration + 's';
+            delayValue.textContent = delay + 's';
+
+            // Update demo box
+            transitionDemo.style.transition = `${property} ${duration}s ${timing} ${delay}s`;
+
+            // Apply hover effect styles
+            transitionDemo.onmouseenter = function() {
+                if (property === 'all' || property === 'background') {
+                    this.style.background = '#e74c3c';
+                }
+                if (property === 'all' || property === 'transform') {
+                    this.style.transform = 'scale(1.2) rotate(10deg)';
+                }
+                if (property === 'all' || property === 'border-radius') {
+                    this.style.borderRadius = '50%';
+                }
+            };
+
+            transitionDemo.onmouseleave = function() {
+                this.style.background = '';
+                this.style.transform = '';
+                this.style.borderRadius = '';
+            };
+        }
+
+        propertySelect.addEventListener('change', updateTransition);
+        durationSlider.addEventListener('input', updateTransition);
+        timingSelect.addEventListener('change', updateTransition);
+        delaySlider.addEventListener('input', updateTransition);
+
+        // Initialize transition demo
+        updateTransition();
+
+        // Transition examples
+        const transitionPreviews = document.querySelectorAll('.demo-transition');
+        transitionPreviews.forEach(preview => {
+            const effect = preview.getAttribute('data-effect');
+
+            switch(effect) {
+                case 'color':
+                    preview.style.transition = 'all 0.5s ease';
+                    preview.onmouseenter = function() {
+                        this.style.background = '#e74c3c';
+                        this.style.transform = 'scale(1.1)';
+                    };
+                    preview.onmouseleave = function() {
+                        this.style.background = '';
+                        this.style.transform = '';
+                    };
+                    break;
+
+                case 'scale':
+                    preview.style.transition = 'transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+                    preview.onmouseenter = function() {
+                        this.style.transform = 'scale(1.2)';
+                    };
+                    preview.onmouseleave = function() {
+                        this.style.transform = '';
+                    };
+                    break;
+
+                case 'rotate':
+                    preview.style.transition = 'transform 0.6s ease-in-out';
+                    preview.onmouseenter = function() {
+                        this.style.transform = 'rotate(180deg)';
+                    };
+                    preview.onmouseleave = function() {
+                        this.style.transform = '';
+                    };
+                    break;
+
+                case 'shadow':
+                    preview.style.transition = 'box-shadow 0.3s ease, transform 0.3s ease';
+                    preview.onmouseenter = function() {
+                        this.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+                        this.style.transform = 'translateY(-5px)';
+                    };
+                    preview.onmouseleave = function() {
+                        this.style.boxShadow = '';
+                        this.style.transform = '';
+                    };
+                    break;
+            }
+        });
+
+        // Animation examples
+        const animationCards = document.querySelectorAll('.animation-card');
+        const animationDemo = document.getElementById('animationDemo');
+
+        animationCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const animation = this.getAttribute('data-animation');
+                animationDemo.className = 'demo-box';
+                animationDemo.classList.add(animation);
+            });
+        });
+
+        // Animation playground
+        const animName = document.getElementById('anim-name');
+        const animDuration = document.getElementById('anim-duration');
+        const animTiming = document.getElementById('anim-timing');
+        const animDelay = document.getElementById('anim-delay');
+        const animIteration = document.getElementById('anim-iteration');
+        const animDirection = document.getElementById('anim-direction');
+        const animDurationValue = document.getElementById('anim-duration-value');
+        const animDelayValue = document.getElementById('anim-delay-value');
+        const playgroundBox = document.getElementById('playgroundBox');
+        const playBtn = document.getElementById('play-animation');
+        const stopBtn = document.getElementById('stop-animation');
+
+        // Code elements
+        const codeName = document.getElementById('code-name');
+        const codeDuration = document.getElementById('code-duration');
+        const codeTiming = document.getElementById('code-timing');
+        const codeDelay = document.getElementById('code-delay');
+        const codeIteration = document.getElementById('code-iteration');
+        const codeDirection = document.getElementById('code-direction');
+
+        function updatePlayground() {
+            const duration = animDuration.value;
+            const delay = animDelay.value;
+
+            // Update display values
+            animDurationValue.textContent = duration + 's';
+            animDelayValue.textContent = delay + 's';
+
+            // Update code display
+            codeName.textContent = animName.value;
+            codeDuration.textContent = duration + 's';
+            codeTiming.textContent = animTiming.value;
+            codeDelay.textContent = delay + 's';
+            codeIteration.textContent = animIteration.value;
+            codeDirection.textContent = animDirection.value;
+        }
+
+        function applyAnimation() {
+            playgroundBox.style.animation = '';
+            void playgroundBox.offsetWidth; // Trigger reflow
+
+            playgroundBox.style.animation = `
+                ${animName.value}
+                ${animDuration.value}s
+                ${animTiming.value}
+                ${animDelay.value}s
+                ${animIteration.value}
+                ${animDirection.value}
+            `;
+        }
+
+        animName.addEventListener('change', updatePlayground);
+        animDuration.addEventListener('input', updatePlayground);
+        animTiming.addEventListener('change', updatePlayground);
+        animDelay.addEventListener('input', updatePlayground);
+        animIteration.addEventListener('change', updatePlayground);
+        animDirection.addEventListener('change', updatePlayground);
+
+        playBtn.addEventListener('click', applyAnimation);
+        stopBtn.addEventListener('click', function() {
+            playgroundBox.style.animation = 'none';
+        });
+
+        // Initialize playground
+        updatePlayground();
+    </script>
+</body>
+</html>

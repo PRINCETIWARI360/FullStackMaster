@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React State & Lifecycle Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --purple: #9b59b6;
+            --gray: #95a5a6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--purple));
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .card-header i {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "JSX";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        .code-tag {
+            color: #63b3ed;
+        }
+
+        .code-attr {
+            color: #f6ad55;
+        }
+
+        .code-value {
+            color: #68d391;
+        }
+
+        .demo-area {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .demo-container {
+            padding: 20px;
+            border: 2px dashed #3498db;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 200px;
+            background-color: #fff;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .best-practices {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .practice-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid var(--success);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .practice-card h4 {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .practice-card h4 i {
+            color: var(--success);
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        /* Task Manager App Styles */
+        .task-manager-app {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .app-title {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .app-subtitle {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .task-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .task-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            min-width: 250px;
+        }
+
+        .add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .add-btn:hover {
+            background: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid var(--primary);
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .task-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            border-left: 5px solid var(--primary);
+        }
+
+        .task-item.completed {
+            border-left-color: var(--success);
+            opacity: 0.8;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+
+        .task-checkbox {
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            accent-color: var(--success);
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 1.2rem;
+            word-break: break-word;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .task-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .task-btn.edit {
+            color: var(--primary);
+        }
+
+        .task-btn.delete {
+            color: var(--accent);
+        }
+
+        .task-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.1);
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .lifecycle-demo {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+        }
+
+        .lifecycle-event {
+            padding: 5px 10px;
+            background: white;
+            border-radius: 5px;
+            margin: 5px 0;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .task-form {
+                flex-direction: column;
+            }
+
+            .task-input {
+                width: 100%;
+            }
+
+            .add-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .task-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .task-actions {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>React State & Lifecycle</h1>
+            <p class="tagline">Mastering Component State and Lifecycle Methods</p>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-database"></i>
+                    <h2>Understanding State</h2>
+                </div>
+
+                <p>State is a built-in React object that contains data or information about the component. A component's state can change over time, and whenever it changes, the component re-renders.</p>
+
+                <h3><i class="fas fa-code"></i> Using State with Hooks</h3>
+                <div class="code-block">
+                    <span class="code-comment">// Import useState hook</span>
+                    <span class="code-tag">import</span> { useState } <span class="code-tag">from</span> <span class="code-value">'react'</span>;
+
+                    <span class="code-tag">function</span> <span class="code-attr">Counter</span>() {
+                      <span class="code-comment">// Declare a state variable "count" with initial value 0</span>
+                      <span class="code-tag">const</span> [count, setCount] = <span class="code-attr">useState</span>(0);
+
+                      <span class="code-tag">return</span> (
+                        <span class="code-tag">&lt;div&gt;</span>
+                          <span class="code-tag">&lt;p&gt;</span>Count: {count}<span class="code-tag">&lt;/p&gt;</span>
+                          <span class="code-tag">&lt;button</span> <span class="code-attr">onClick=</span>{() => <span class="code-attr">setCount</span>(count + 1)}<span class="code-tag">&gt;</span>
+                            Increment
+                          <span class="code-tag">&lt;/button&gt;</span>
+                        <span class="code-tag">&lt;/div&gt;</span>
+                      );
+                    }
+                </div>
+
+                <h3><i class="fas fa-cogs"></i> Key State Concepts</h3>
+                <ul>
+                    <li><strong>useState Hook</strong>: The primary way to manage state in functional components</li>
+                    <li><strong>State Updates</strong>: Always use the setter function to update state</li>
+                    <li><strong>Asynchronous Updates</strong>: State updates may be asynchronous</li>
+                    <li><strong>Functional Updates</strong>: Use when new state depends on previous state</li>
+                    <li><strong>State Batching</strong>: Multiple state updates may be batched together</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-recycle"></i>
+                    <h2>Component Lifecycle</h2>
+                </div>
+
+                <p>Lifecycle methods allow you to run code at specific points in a component's lifetime. With hooks, useEffect replaces lifecycle methods like componentDidMount, componentDidUpdate, and componentWillUnmount.</p>
+
+                <h3><i class="fas fa-code"></i> useEffect Hook</h3>
+                <div class="code-block">
+                    <span class="code-comment">// Import useEffect hook</span>
+                    <span class="code-tag">import</span> { useEffect } <span class="code-tag">from</span> <span class="code-value">'react'</span>;
+
+                    <span class="code-tag">function</span> <span class="code-attr">UserProfile</span>(<span class="code-attr">props</span>) {
+                      <span class="code-tag">const</span> [user, setUser] = <span class="code-attr">useState</span>(null);
+
+                      <span class="code-comment">// Similar to componentDidMount and componentDidUpdate</span>
+                      <span class="code-attr">useEffect</span>(() => {
+                        <span class="code-comment">// Fetch user data when component mounts</span>
+                        <span class="code-attr">fetchUserData</span>(props.userId).<span class="code-attr">then</span>(data => {
+                          <span class="code-attr">setUser</span>(data);
+                        });
+
+                        <span class="code-comment">// Cleanup function (similar to componentWillUnmount)</span>
+                        <span class="code-tag">return</span> () => {
+                          <span class="code-comment">// Cancel any ongoing requests</span>
+                          <span class="code-attr">cancelRequest</span>();
+                        };
+                      }, [props.userId]); <span class="code-comment">// Only re-run if userId changes</span>
+
+                      <span class="code-tag">return</span> (
+                        <span class="code-tag">&lt;div&gt;</span>
+                          {user ? <span class="code-tag">&lt;UserInfo</span> <span class="code-attr">user=</span>{user} <span class="code-tag">/&gt;</span> : <span class="code-tag">&lt;p&gt;</span>Loading...<span class="code-tag">&lt;/p&gt;</span>}
+                        <span class="code-tag">&lt;/div&gt;</span>
+                      );
+                    }
+                </div>
+
+                <h3><i class="fas fa-cogs"></i> Lifecycle Phases</h3>
+                <ul>
+                    <li><strong>Mounting</strong>: Component is being created and inserted into the DOM</li>
+                    <li><strong>Updating</strong>: Component is being re-rendered due to changes in props or state</li>
+                    <li><strong>Unmounting</strong>: Component is being removed from the DOM</li>
+                    <li><strong>Error Handling</strong>: When an error occurs during rendering</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-laptop-code"></i>
+                <h2>Mini Project: Task Manager</h2>
+            </div>
+
+            <div id="task-manager-app" class="task-manager-app"></div>
+        </div>
+
+        <div class="best-practices">
+            <div class="card-header">
+                <i class="fas fa-star"></i>
+                <h2>Best Practices</h2>
+            </div>
+
+            <div class="practice-grid">
+                <div class="practice-card">
+                    <h4><i class="fas fa-cube"></i> State Structure</h4>
+                    <p>Keep state as simple as possible. Avoid deeply nested state objects.</p>
+                </div>
+
+                <div class="practice-card">
+                    <h4><i class="fas fa-arrow-up"></i> Lift State Up</h4>
+                    <p>When multiple components need access to the same state, lift it to their closest common ancestor.</p>
+                </div>
+
+                <div class="practice-card">
+                    <h4><i class="fas fa-sync-alt"></i> Immutability</h4>
+                    <p>Always treat state as immutable. Create new objects instead of mutating existing ones.</p>
+                </div>
+
+                <div class="practice-card">
+                    <h4><i class="fas fa-broom"></i> Cleanup Effects</h4>
+                    <p>Always return a cleanup function from useEffect to prevent memory leaks.</p>
+                </div>
+
+                <div class="practice-card">
+                    <h4><i class="fas fa-tachometer-alt"></i> Performance</h4>
+                    <p>Optimize useEffect dependencies to avoid unnecessary re-renders.</p>
+                </div>
+
+                <div class="practice-card">
+                    <h4><i class="fas fa-code"></i> Custom Hooks</h4>
+                    <p>Extract component logic into reusable custom hooks.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-lightbulb"></i>
+                <h2>Advanced Concepts</h2>
+            </div>
+
+            <h3><i class="fas fa-code"></i> useReducer Hook</h3>
+            <div class="code-block">
+                <span class="code-comment">// For complex state logic</span>
+                <span class="code-tag">import</span> { useReducer } <span class="code-tag">from</span> <span class="code-value">'react'</span>;
+
+                <span class="code-tag">const</span> <span class="code-attr">initialState</span> = { count: 0 };
+
+                <span class="code-tag">function</span> <span class="code-attr">reducer</span>(state, action) {
+                  <span class="code-tag">switch</span> (action.<span class="code-attr">type</span>) {
+                    <span class="code-tag">case</span> <span class="code-value">'increment'</span>:
+                      <span class="code-tag">return</span> { count: state.<span class="code-attr">count</span> + 1 };
+                    <span class="code-tag">case</span> <span class="code-value">'decrement'</span>:
+                      <span class="code-tag">return</span> { count: state.<span class="code-attr">count</span> - 1 };
+                    <span class="code-tag">default</span>:
+                      <span class="code-tag">throw new</span> <span class="code-attr">Error</span>();
+                  }
+                }
+
+                <span class="code-tag">function</span> <span class="code-attr">Counter</span>() {
+                  <span class="code-tag">const</span> [state, dispatch] = <span class="code-attr">useReducer</span>(reducer, initialState);
+
+                  <span class="code-tag">return</span> (
+                    <span class="code-tag">&lt;&gt;</span>
+                      <span class="code-tag">&lt;p&gt;</span>Count: {state.count}<span class="code-tag">&lt;/p&gt;</span>
+                      <span class="code-tag">&lt;button</span> <span class="code-attr">onClick=</span>{() => <span class="code-attr">dispatch</span>({ type: <span class="code-value">'decrement'</span> })}<span class="code-tag">&gt;</span>
+                        Decrement
+                      <span class="code-tag">&lt;/button&gt;</span>
+                      <span class="code-tag">&lt;button</span> <span class="code-attr">onClick=</span>{() => <span class="code-attr">dispatch</span>({ type: <span class="code-value">'increment'</span> })}<span class="code-tag">&gt;</span>
+                        Increment
+                      <span class="code-tag">&lt;/button&gt;</span>
+                    <span class="code-tag">&lt;/&gt;</span>
+                  );
+                }
+            </div>
+
+            <h3><i class="fas fa-code"></i> useContext Hook</h3>
+            <div class="code-block">
+                <span class="code-comment">// For global state management</span>
+                <span class="code-tag">import</span> { createContext, useContext } <span class="code-tag">from</span> <span class="code-value">'react'</span>;
+
+                <span class="code-comment">// Create a Context</span>
+                <span class="code-tag">const</span> <span class="code-attr">ThemeContext</span> = <span class="code-attr">createContext</span>(<span class="code-value">'light'</span>);
+
+                <span class="code-tag">function</span> <span class="code-attr">App</span>() {
+                  <span class="code-tag">return</span> (
+                    <span class="code-tag">&lt;ThemeContext.Provider</span> <span class="code-attr">value=</span><span class="code-value">"dark"</span><span class="code-tag">&gt;</span>
+                      <span class="code-tag">&lt;Toolbar</span> <span class="code-tag">/&gt;</span>
+                    <span class="code-tag">&lt;/ThemeContext.Provider&gt;</span>
+                  );
+                }
+
+                <span class="code-tag">function</span> <span class="code-attr">Toolbar</span>() {
+                  <span class="code-tag">return</span> (
+                    <span class="code-tag">&lt;div&gt;</span>
+                      <span class="code-tag">&lt;ThemedButton</span> <span class="code-tag">/&gt;</span>
+                    <span class="code-tag">&lt;/div&gt;</span>
+                  );
+                }
+
+                <span class="code-tag">function</span> <span class="code-attr">ThemedButton</span>() {
+                  <span class="code-tag">const</span> theme = <span class="code-attr">useContext</span>(ThemeContext);
+                  <span class="code-tag">return</span> (
+                    <span class="code-tag">&lt;button</span> <span class="code-attr">className=</span>{theme}<span class="code-tag">&gt;</span>
+                      {theme === <span class="code-value">'dark'</span> ? <span class="code-value">'Dark'</span> : <span class="code-value">'Light'</span>} Theme
+                    <span class="code-tag">&lt;/button&gt;</span>
+                  );
+                }
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>React State & Lifecycle Guide</strong> | Created with React, HTML5 and CSS3</p>
+            <p>Mastering state and lifecycle is essential for building dynamic React applications!</p>
+        </footer>
+    </div>
+
+    <!-- Babel script for JSX transformation -->
+    <script type="text/babel">
+        // TaskManager Component
+        function TaskManager() {
+            // State for tasks
+            const [tasks, setTasks] = React.useState(() => {
+                // Initialize from localStorage or default to sample tasks
+                const savedTasks = localStorage.getItem('tasks');
+                return savedTasks ? JSON.parse(savedTasks) : [
+                    { id: 1, text: 'Learn React State', completed: true },
+                    { id: 2, text: 'Build a Task Manager', completed: false },
+                    { id: 3, text: 'Master Lifecycle Methods', completed: false }
+                ];
+            });
+
+            // State for new task input
+            const [newTask, setNewTask] = React.useState('');
+
+            // State for filter
+            const [filter, setFilter] = React.useState('all');
+
+            // State for editing
+            const [editingId, setEditingId] = React.useState(null);
+            const [editText, setEditText] = React.useState('');
+
+            // State for lifecycle demo
+            const [lifecycleEvents, setLifecycleEvents] = React.useState([]);
+
+            // Add lifecycle event to log
+            const logLifecycleEvent = (event) => {
+                setLifecycleEvents(prev => [...prev, event]);
+            };
+
+            // useEffect for componentDidMount
+            React.useEffect(() => {
+                logLifecycleEvent('Component Mounted');
+
+                // Cleanup for componentWillUnmount
+                return () => {
+                    logLifecycleEvent('Component Unmounted');
+                };
+            }, []);
+
+            // useEffect for task changes
+            React.useEffect(() => {
+                logLifecycleEvent('Tasks Updated');
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }, [tasks]);
+
+            // Add a new task
+            const addTask = () => {
+                if (newTask.trim() === '') return;
+
+                const newTaskObj = {
+                    id: Date.now(),
+                    text: newTask,
+                    completed: false
+                };
+
+                setTasks([...tasks, newTaskObj]);
+                setNewTask('');
+                logLifecycleEvent('Task Added');
+            };
+
+            // Toggle task completion
+            const toggleTask = (id) => {
+                setTasks(tasks.map(task =>
+                    task.id === id ? { ...task, completed: !task.completed } : task
+                ));
+                logLifecycleEvent('Task Toggled');
+            };
+
+            // Delete a task
+            const deleteTask = (id) => {
+                setTasks(tasks.filter(task => task.id !== id));
+                logLifecycleEvent('Task Deleted');
+            };
+
+            // Start editing a task
+            const startEditing = (task) => {
+                setEditingId(task.id);
+                setEditText(task.text);
+            };
+
+            // Save edited task
+            const saveEdit = () => {
+                setTasks(tasks.map(task =>
+                    task.id === editingId ? { ...task, text: editText } : task
+                ));
+                setEditingId(null);
+                setEditText('');
+                logLifecycleEvent('Task Edited');
+            };
+
+            // Cancel editing
+            const cancelEdit = () => {
+                setEditingId(null);
+                setEditText('');
+            };
+
+            // Filter tasks based on current filter
+            const filteredTasks = tasks.filter(task => {
+                if (filter === 'active') return !task.completed;
+                if (filter === 'completed') return task.completed;
+                return true;
+            });
+
+            // Stats calculations
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(task => task.completed).length;
+            const activeTasks = totalTasks - completedTasks;
+
+            return (
+                <div className="task-manager-app">
+                    <div className="app-header">
+                        <h2 className="app-title">Task Manager</h2>
+                        <p className="app-subtitle">A React State & Lifecycle Demo</p>
+                    </div>
+
+                    <div className="task-form">
+                        <input
+                            type="text"
+                            className="task-input"
+                            value={newTask}
+                            onChange={(e) => setNewTask(e.target.value)}
+                            placeholder="Add a new task..."
+                            onKeyPress={(e) => e.key === 'Enter' && addTask()}
+                        />
+                        <button className="add-btn" onClick={addTask}>
+                            <i className="fas fa-plus"></i> Add Task
+                        </button>
+                    </div>
+
+                    <div className="filters">
+                        <button
+                            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+                            onClick={() => setFilter('all')}
+                        >
+                            All Tasks
+                        </button>
+                        <button
+                            className={`filter-btn ${filter === 'active' ? 'active' : ''}`}
+                            onClick={() => setFilter('active')}
+                        >
+                            Active
+                        </button>
+                        <button
+                            className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
+                            onClick={() => setFilter('completed')}
+                        >
+                            Completed
+                        </button>
+                    </div>
+
+                    <div className="task-list">
+                        {filteredTasks.length === 0 ? (
+                            <div className="demo-container">
+                                <p style={{textAlign: 'center', color: 'var(--gray)'}}>
+                                    {filter === 'all'
+                                        ? "No tasks yet. Add a new task!"
+                                        : filter === 'active'
+                                            ? "No active tasks"
+                                            : "No completed tasks"}
+                                </p>
+                            </div>
+                        ) : (
+                            filteredTasks.map(task => (
+                                <div
+                                    key={task.id}
+                                    className={`task-item ${task.completed ? 'completed' : ''}`}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        className="task-checkbox"
+                                        checked={task.completed}
+                                        onChange={() => toggleTask(task.id)}
+                                    />
+
+                                    {editingId === task.id ? (
+                                        <div style={{flex: 1, display: 'flex', gap: '10px'}}>
+                                            <input
+                                                type="text"
+                                                className="task-input"
+                                                value={editText}
+                                                onChange={(e) => setEditText(e.target.value)}
+                                                style={{flex: 1, marginRight: '10px'}}
+                                            />
+                                            <button
+                                                className="task-btn edit"
+                                                onClick={saveEdit}
+                                            >
+                                                <i className="fas fa-check"></i>
+                                            </button>
+                                            <button
+                                                className="task-btn delete"
+                                                onClick={cancelEdit}
+                                            >
+                                                <i className="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <p className="task-text">{task.text}</p>
+                                    )}
+
+                                    <div className="task-actions">
+                                        <button
+                                            className="task-btn edit"
+                                            onClick={() => startEditing(task)}
+                                            disabled={task.completed}
+                                        >
+                                            <i className="fas fa-edit"></i>
+                                        </button>
+                                        <button
+                                            className="task-btn delete"
+                                            onClick={() => deleteTask(task.id)}
+                                        >
+                                            <i className="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+
+                    <div className="stats-container">
+                        <div className="stat-card">
+                            <div className="stat-value">{totalTasks}</div>
+                            <div className="stat-label">Total Tasks</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-value">{activeTasks}</div>
+                            <div className="stat-label">Active Tasks</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-value">{completedTasks}</div>
+                            <div className="stat-label">Completed Tasks</div>
+                        </div>
+                    </div>
+
+                    <div className="lifecycle-demo">
+                        <h4>Lifecycle Events:</h4>
+                        {lifecycleEvents.map((event, index) => (
+                            <div key={index} className="lifecycle-event">
+                                <i className="fas fa-code"></i> {event}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        const rootElement = document.getElementById('task-manager-app');
+        ReactDOM.render(<TaskManager />, rootElement);
+    </script>
+</body>
+</html>

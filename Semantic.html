@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic HTML5 Elements Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--success));
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .card-header i {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "HTML";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        .code-tag {
+            color: #63b3ed;
+        }
+
+        .code-attr {
+            color: #f6ad55;
+        }
+
+        .code-value {
+            color: #68d391;
+        }
+
+        .semantic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .semantic-item {
+            background: #f8f9fa;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .semantic-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            background: #e9ecef;
+            border-color: var(--accent);
+        }
+
+        .semantic-item h4 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .semantic-item i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .visual-structure {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .structure-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            gap: 20px;
+            margin: 30px 0;
+            grid-template-areas:
+                "header header header header"
+                "nav main main aside"
+                "section section article article"
+                "footer footer footer footer";
+        }
+
+        .structure-item {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-structure {
+            grid-area: header;
+            background: var(--primary);
+        }
+
+        .nav-structure {
+            grid-area: nav;
+            background: var(--success);
+        }
+
+        .main-structure {
+            grid-area: main;
+            background: var(--warning);
+        }
+
+        .aside-structure {
+            grid-area: aside;
+            background: #9b59b6;
+        }
+
+        .section-structure {
+            grid-area: section;
+            background: #1abc9c;
+        }
+
+        .article-structure {
+            grid-area: article;
+            background: #e67e22;
+        }
+
+        .footer-structure {
+            grid-area: footer;
+            background: var(--secondary);
+        }
+
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .benefit-card {
+            background: #f8f9fa;
+            border-left: 5px solid var(--success);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .benefit-card h4 {
+            font-size: 1.4rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .benefit-card h4 i {
+            color: var(--success);
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        .interactive-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .interactive-btn {
+            flex: 1;
+            min-width: 200px;
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1.1rem;
+        }
+
+        .interactive-btn:hover {
+            background: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Semantic HTML5 Elements</h1>
+            <p class="tagline">Meaningful Markup for Modern Web Development</p>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-code"></i>
+                    <h2>What is Semantic HTML?</h2>
+                </div>
+
+                <p>Semantic HTML introduces meaning to the web page rather than just presentation. It uses HTML tags that tell browsers and developers what kind of content they contain and how that content relates to other content.</p>
+
+                <h3><i class="fas fa-question-circle"></i> Why Use Semantic Elements?</h3>
+                <ul>
+                    <li><strong>Accessibility</strong>: Screen readers can better interpret page structure</li>
+                    <li><strong>SEO</strong>: Search engines understand content better with semantic markup</li>
+                    <li><strong>Maintainability</strong>: Cleaner, more readable code structure</li>
+                    <li><strong>Future-proofing</strong>: Better compatibility with future web standards</li>
+                    <li><strong>Consistency</strong>: Standardized structure for better collaboration</li>
+                </ul>
+
+                <h3><i class="fas fa-history"></i> Evolution of HTML</h3>
+                <p>HTML has evolved from purely presentational markup to semantic structure. HTML5 introduced many new semantic elements to replace generic &lt;div&gt; containers that were previously used with IDs or classes.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-list"></i>
+                    <h2>Semantic vs Non-semantic</h2>
+                </div>
+
+                <div class="code-block">
+                    <span class="code-comment">&lt;!-- Non-semantic HTML --&gt;</span>
+                    <span class="code-tag">&lt;div</span> <span class="code-attr">id=</span><span class="code-value">"header"</span><span class="code-tag">&gt;</span>...<span class="code-tag">&lt;/div&gt;</span>
+                    <span class="code-tag">&lt;div</span> <span class="code-attr">class=</span><span class="code-value">"nav"</span><span class="code-tag">&gt;</span>...<span class="code-tag">&lt;/div&gt;</span>
+                    <span class="code-tag">&lt;div</span> <span class="code-attr">id=</span><span class="code-value">"main"</span><span class="code-tag">&gt;</span>...<span class="code-tag">&lt;/div&gt;</span>
+                    <span class="code-tag">&lt;div</span> <span class="code-attr">class=</span><span class="code-value">"footer"</span><span class="code-tag">&gt;</span>...<span class="code-tag">&lt;/div&gt;</span>
+
+                    <span class="code-comment">&lt;!-- Semantic HTML5 --&gt;</span>
+                    <span class="code-tag">&lt;header&gt;</span>...<span class="code-tag">&lt;/header&gt;</span>
+                    <span class="code-tag">&lt;nav&gt;</span>...<span class="code-tag">&lt;/nav&gt;</span>
+                    <span class="code-tag">&lt;main&gt;</span>...<span class="code-tag">&lt;/main&gt;</span>
+                    <span class="code-tag">&lt;footer&gt;</span>...<span class="code-tag">&lt;/footer&gt;</span>
+                </div>
+
+                <h3><i class="fas fa-lightbulb"></i> Key Differences</h3>
+                <ul>
+                    <li>Semantic elements have inherent meaning</li>
+                    <li>Non-semantic elements are generic containers</li>
+                    <li>Semantic elements improve accessibility</li>
+                    <li>Search engines prioritize semantic markup</li>
+                    <li>Semantic elements are self-documenting</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-cubes"></i>
+                <h2>Semantic Elements Reference</h2>
+            </div>
+
+            <div class="semantic-grid">
+                <div class="semantic-item">
+                    <i class="fas fa-heading"></i>
+                    <h4>&lt;header&gt;</h4>
+                    <p>Introductory content or navigation</p>
+                </div>
+
+                <div class="semantic-item">
+                    <i class="fas fa-bars"></i>
+                    <h4>&lt;nav&gt;</h4>
+                    <p>Navigation links</p>
+                </div>
+
+                <div class="semantic-item">
+                    <i class="fas fa-star"></i>
+                    <h4>&lt;main&gt;</h4>
+                    <p>Dominant content of the document</p>
+                </div>
+
+                <div class="semantic-item">
+                    <i class="fas fa-newspaper"></i>
+                    <h4>&lt;article&gt;</h4>
+                    <p>Self-contained composition</p>
+                </div>
+
+                <div class="semantic-item">
+                    <i class="fas fa-columns"></i>
+                    <h4>&lt;section&gt;</h4>
+                    <p>Thematic grouping of content</p>
+                </div>
+
+                <div class="semantic-item">
+                    <i class="fas fa-window-restore"></i>
+                    <h4>&lt;aside&gt;</h4>
+                    <p>Indirectly related content</p>
+                </div>
+
+                <div class="semantic-item">
+                    <i class="fas fa-shoe-prints"></i>
+                    <h4>&lt;footer&gt;</h4>
+                    <p>Footer for its nearest ancestor</p>
+                </div>
+
+                <div class="semantic-item">
+                    <i class="fas fa-info-circle"></i>
+                    <h4>&lt;figure&gt; & &lt;figcaption&gt;</h4>
+                    <p>Self-contained content with caption</p>
+                </div>
+
+                <div class="semantic-item">
+                    <i class="fas fa-time"></i>
+                    <h4>&lt;time&gt;</h4>
+                    <p>Machine-readable date/time</p>
+                </div>
+
+                <div class="semantic-item">
+                    <i class="fas fa-map-marked"></i>
+                    <h4>&lt;mark&gt;</h4>
+                    <p>Highlighted text for reference</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="visual-structure">
+            <div class="card-header">
+                <i class="fas fa-sitemap"></i>
+                <h2>Semantic Page Structure</h2>
+            </div>
+
+            <p>This visual representation shows how semantic elements create a meaningful document structure:</p>
+
+            <div class="structure-container">
+                <div class="structure-item header-structure">&lt;header&gt;</div>
+                <div class="structure-item nav-structure">&lt;nav&gt;</div>
+                <div class="structure-item main-structure">&lt;main&gt;</div>
+                <div class="structure-item aside-structure">&lt;aside&gt;</div>
+                <div class="structure-item section-structure">&lt;section&gt;</div>
+                <div class="structure-item article-structure">&lt;article&gt;</div>
+                <div class="structure-item footer-structure">&lt;footer&gt;</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-medal"></i>
+                <h2>Benefits of Semantic HTML</h2>
+            </div>
+
+            <div class="benefits">
+                <div class="benefit-card">
+                    <h4><i class="fas fa-universal-access"></i> Accessibility</h4>
+                    <p>Screen readers and assistive technologies can better interpret and navigate your content when you use proper semantic elements.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4><i class="fas fa-search"></i> SEO Benefits</h4>
+                    <p>Search engines give more weight to content inside semantic elements, improving your site's search rankings.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4><i class="fas fa-code"></i> Maintainability</h4>
+                    <p>Semantic HTML is self-documenting and easier to read, making it simpler to maintain and update.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4><i class="fas fa-sync-alt"></i> Future Compatibility</h4>
+                    <p>Semantic HTML works better with modern and future web technologies like voice assistants and AI.</p>
+                </div>
+            </div>
+
+            <div class="interactive-section">
+                <button class="interactive-btn" onclick="showTip('usage')">
+                    <i class="fas fa-lightbulb"></i> Proper Usage Tips
+                </button>
+                <button class="interactive-btn" onclick="showTip('common')">
+                    <i class="fas fa-lightbulb"></i> Common Mistakes
+                </button>
+                <button class="interactive-btn" onclick="showTip('resources')">
+                    <i class="fas fa-lightbulb"></i> Learning Resources
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Semantic HTML5 Elements Guide</strong> | Created with HTML5, CSS3, and JavaScript</p>
+            <p>Remember: Semantic markup creates a better web for everyone!</p>
+        </footer>
+    </div>
+
+    <script>
+        function showTip(tipType) {
+            let message;
+
+            switch(tipType) {
+                case 'usage':
+                    message = "Tip: Use <header> for introductory content, not just at the top of the page. It can be used in <article> and <section> elements too!";
+                    break;
+                case 'common':
+                    message = "Common Mistake: Avoid using <section> as a generic container. Use <div> for styling purposes and <section> only for thematic grouping.";
+                    break;
+                case 'resources':
+                    message = "Resources: Check MDN Web Docs for detailed guides on semantic HTML: https://developer.mozilla.org/en-US/docs/Glossary/Semantics";
+                    break;
+                default:
+                    message = "Semantic HTML Tip: Always prefer semantic elements over generic <div> elements when appropriate.";
+            }
+
+            alert(message);
+        }
+
+        // Add hover effect to semantic items
+        document.querySelectorAll('.semantic-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('i');
+                icon.style.transform = 'rotate(10deg) scale(1.2)';
+                icon.style.color = '#e74c3c';
+                icon.style.transition = 'all 0.3s ease';
+            });
+
+            item.addEventListener('mouseleave', function() {
+                const icon = this.querySelector('i');
+                icon.style.transform = '';
+                icon.style.color = '';
+            });
+        });
+    </script>
+</body>
+</html>

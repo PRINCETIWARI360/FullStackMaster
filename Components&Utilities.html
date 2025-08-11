@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Components & Utilities Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --purple: #9b59b6;
+            --bootstrap: #7952b3;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--bootstrap), var(--accent), var(--success));
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--bootstrap);
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--bootstrap);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--bootstrap);
+        }
+
+        .section-header i {
+            background: var(--bootstrap);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--bootstrap);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            background: var(--bootstrap);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--bootstrap);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "HTML";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--bootstrap);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        .code-selector {
+            color: #63b3ed;
+        }
+
+        .code-property {
+            color: #f6ad55;
+        }
+
+        .code-value {
+            color: #68d391;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 2px solid var(--bootstrap);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .card h4 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h4 i {
+            color: var(--bootstrap);
+        }
+
+        .demo-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .component-preview {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .utility-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .utility-card h5 {
+            color: var(--bootstrap);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .utility-example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid var(--bootstrap);
+            margin-top: 15px;
+        }
+
+        .color-box {
+            width: 100%;
+            height: 100px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            margin-bottom: 15px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .bootstrap-icon {
+            color: var(--bootstrap);
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fab fa-bootstrap bootstrap-icon"></i>Bootstrap Components & Utilities</h1>
+            <p class="tagline">Build responsive, mobile-first projects with the world's most popular front-end toolkit</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="components">
+                <i class="fas fa-cubes"></i> Components
+            </button>
+            <button class="tab-btn" data-tab="utilities">
+                <i class="fas fa-tools"></i> Utilities
+            </button>
+            <button class="tab-btn" data-tab="examples">
+                <i class="fas fa-laptop-code"></i> Interactive Examples
+            </button>
+        </div>
+
+        <div id="components" class="content-section active">
+            <div class="section-header">
+                <i class="fas fa-cubes"></i>
+                <h2>Bootstrap Components</h2>
+            </div>
+
+            <p>Bootstrap comes with nearly two dozen components that are ready to use right out of the box. They're designed to work together to create consistent, responsive interfaces.</p>
+
+            <h3><i class="fas fa-star"></i> Essential Components</h3>
+            <div class="demo-grid">
+                <div class="card">
+                    <h4><i class="fas fa-bars"></i> Navigation</h4>
+                    <p>Navbars, tabs, pills, and breadcrumbs for site navigation.</p>
+                    <div class="demo-container">
+                        <div class="component-preview">
+                            <nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
+                                <div class="container-fluid">
+                                    <a class="navbar-brand" href="#">Navbar</a>
+                                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                    <div class="collapse navbar-collapse" id="navbarNav">
+                                        <ul class="navbar-nav">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" href="#">Home</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#">Features</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#">Pricing</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#">Active</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Link</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Link</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-cards"></i> Cards</h4>
+                    <p>Flexible content containers with multiple variants and options.</p>
+                    <div class="demo-container">
+                        <div class="component-preview">
+                            <div class="card" style="width: 100%;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">Some quick example text to build on the card title.</p>
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-table"></i> Tables</h4>
+                    <p>For displaying tabular data with advanced options.</p>
+                    <div class="demo-container">
+                        <div class="component-preview">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>First</th>
+                                        <th>Last</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>John</td>
+                                        <td>Doe</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Jane</td>
+                                        <td>Smith</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-sliders-h"></i> Forms</h4>
+                    <p>Form controls, layouts, and custom components.</p>
+                    <div class="demo-container">
+                        <div class="component-preview">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Email address</label>
+                                    <input type="email" class="form-control" placeholder="name@example.com">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-control" placeholder="Password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-layer-group"></i> Interactive Components</h3>
+            <div class="demo-grid">
+                <div class="card">
+                    <h4><i class="fas fa-bell"></i> Alerts</h4>
+                    <p>Contextual feedback messages for user actions.</p>
+                    <div class="demo-container">
+                        <div class="component-preview">
+                            <div class="alert alert-primary" role="alert">
+                                A simple primary alert
+                            </div>
+                            <div class="alert alert-success" role="alert">
+                                A simple success alert
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-spinner"></i> Progress Bars</h4>
+                    <p>Display progress of workflows or actions.</p>
+                    <div class="demo-container">
+                        <div class="component-preview">
+                            <div class="progress mb-3">
+                                <div class="progress-bar" role="progressbar" style="width: 25%"></div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-compress-alt"></i> Collapse</h4>
+                    <p>Toggle visibility of content with a button.</p>
+                    <div class="demo-container">
+                        <div class="component-preview">
+                            <p>
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample">
+                                    Toggle Content
+                                </button>
+                            </p>
+                            <div class="collapse" id="collapseExample">
+                                <div class="card card-body">
+                                    This content is hidden by default but shown when activated.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-toolbox"></i> Tooltips & Popovers</h4>
+                    <p>Custom tooltips and popovers for interactive elements.</p>
+                    <div class="demo-container">
+                        <div class="component-preview">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" title="Tooltip on top">
+                                Tooltip
+                            </button>
+
+                            <button type="button" class="btn btn-primary ms-3" data-bs-toggle="popover" title="Popover title" data-bs-content="Popover content">
+                                Popover
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="utilities" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-tools"></i>
+                <h2>Bootstrap Utilities</h2>
+            </div>
+
+            <p>Bootstrap includes dozens of utilities - classes with a single purpose to reduce the frequency of highly repetitive declarations.</p>
+
+            <h3><i class="fas fa-ruler-combined"></i> Layout Utilities</h3>
+            <div class="demo-grid">
+                <div class="utility-card">
+                    <h5><i class="fas fa-border-style"></i> Spacing</h5>
+                    <p>Assign margin or padding to an element with shorthand classes.</p>
+                    <div class="utility-example">
+                        <div class="d-flex gap-2">
+                            <div class="p-2 bg-primary text-white">Padding</div>
+                            <div class="m-2 bg-success text-white">Margin</div>
+                            <div class="pt-3 bg-warning">Top Padding</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h5><i class="fas fa-expand-arrows-alt"></i> Sizing</h5>
+                    <p>Easily make an element as wide or as tall with width/height utilities.</p>
+                    <div class="utility-example">
+                        <div class="w-25 p-3 bg-light">Width 25%</div>
+                        <div class="w-50 p-3 bg-light mt-2">Width 50%</div>
+                        <div class="w-100 p-3 bg-light mt-2">Width 100%</div>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h5><i class="fas fa-align-left"></i> Text</h5>
+                    <p>Control text alignment, wrapping, weight, and more.</p>
+                    <div class="utility-example">
+                        <p class="text-start">Left aligned text</p>
+                        <p class="text-center">Center aligned text</p>
+                        <p class="text-end">Right aligned text</p>
+                        <p class="fw-bold">Bold text</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-palette"></i> Styling Utilities</h3>
+            <div class="demo-grid">
+                <div class="utility-card">
+                    <h5><i class="fas fa-fill-drip"></i> Colors</h5>
+                    <p>Convey meaning through color with a handful of color utility classes.</p>
+                    <div class="utility-example">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <div class="color-box bg-primary">Primary</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="color-box bg-success">Success</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="color-box bg-danger">Danger</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="color-box bg-warning text-dark">Warning</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h5><i class="fas fa-border-all"></i> Borders</h5>
+                    <p>Add or remove borders, change their radius, and more.</p>
+                    <div class="utility-example">
+                        <div class="d-flex gap-3">
+                            <div class="p-3 border">Default</div>
+                            <div class="p-3 border border-primary">Primary</div>
+                            <div class="p-3 border border-success border-3">Thick</div>
+                            <div class="p-3 border rounded-circle" style="width: 70px; height: 70px;">Circle</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h5><i class="fas fa-sun"></i> Shadows</h5>
+                    <p>Add or remove shadows to elements with box-shadow utilities.</p>
+                    <div class="utility-example">
+                        <div class="d-flex gap-3">
+                            <div class="p-3 shadow-none">No shadow</div>
+                            <div class="p-3 shadow-sm">Small shadow</div>
+                            <div class="p-3 shadow">Regular shadow</div>
+                            <div class="p-3 shadow-lg">Large shadow</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="examples" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-laptop-code"></i>
+                <h2>Interactive Examples</h2>
+            </div>
+
+            <h3><i class="fas fa-edit"></i> Component Builder</h3>
+            <p>Customize a Bootstrap button with different styles and options:</p>
+
+            <div class="demo-container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Button Options</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Button Style</label>
+                                    <select class="form-select" id="button-style">
+                                        <option value="primary">Primary</option>
+                                        <option value="secondary">Secondary</option>
+                                        <option value="success">Success</option>
+                                        <option value="danger">Danger</option>
+                                        <option value="warning">Warning</option>
+                                        <option value="info">Info</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Button Size</label>
+                                    <select class="form-select" id="button-size">
+                                        <option value="sm">Small</option>
+                                        <option value="" selected>Normal</option>
+                                        <option value="lg">Large</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="button-outline">
+                                    <label class="form-check-label" for="button-outline">Outline Style</label>
+                                </div>
+
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="button-rounded">
+                                    <label class="form-check-label" for="button-rounded">Rounded Corners</label>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Button Text</label>
+                                    <input type="text" class="form-control" id="button-text" value="Click Me">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Live Preview</h4>
+                            </div>
+                            <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 300px;">
+                                <button class="btn" id="button-preview">Click Me</button>
+                            </div>
+                            <div class="card-footer">
+                                <h5>Generated Code:</h5>
+                                <div class="code-block">
+                                    &lt;button class="btn <span id="button-classes">btn-primary</span>"&gt;
+                                    Click Me
+                                    &lt;/button&gt;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-magic"></i> Utility Playground</h3>
+            <p>Experiment with spacing, borders, and shadows:</p>
+
+            <div class="demo-container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Margin</label>
+                            <select class="form-select" id="margin-select">
+                                <option value="m-0">0 (m-0)</option>
+                                <option value="m-1">Small (m-1)</option>
+                                <option value="m-3" selected>Medium (m-3)</option>
+                                <option value="m-5">Large (m-5)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Padding</label>
+                            <select class="form-select" id="padding-select">
+                                <option value="p-0">0 (p-0)</option>
+                                <option value="p-1">Small (p-1)</option>
+                                <option value="p-3" selected>Medium (p-3)</option>
+                                <option value="p-5">Large (p-5)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Border</label>
+                            <select class="form-select" id="border-select">
+                                <option value="">None</option>
+                                <option value="border" selected>Default</option>
+                                <option value="border border-2">Thicker</option>
+                                <option value="border border-3">Thickest</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Border Color</label>
+                            <select class="form-select" id="border-color">
+                                <option value="">Default</option>
+                                <option value="border-primary">Primary</option>
+                                <option value="border-success">Success</option>
+                                <option value="border-danger">Danger</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Shadow</label>
+                            <select class="form-select" id="shadow-select">
+                                <option value="shadow-none">None</option>
+                                <option value="shadow-sm" selected>Small</option>
+                                <option value="shadow">Regular</option>
+                                <option value="shadow-lg">Large</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Background Color</label>
+                            <select class="form-select" id="bg-select">
+                                <option value="bg-white">White</option>
+                                <option value="bg-light" selected>Light</option>
+                                <option value="bg-primary text-white">Primary</option>
+                                <option value="bg-success text-white">Success</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <h4>Result:</h4>
+                    <div id="utility-preview" class="d-inline-block m-3 p-3 border shadow-sm bg-light">
+                        <p class="mb-0">This element shows the applied utilities</p>
+                    </div>
+                    <div class="mt-3">
+                        <h5>Applied Classes:</h5>
+                        <div class="p-3 bg-dark text-white rounded">
+                            <code id="utility-classes">m-3 p-3 border shadow-sm bg-light</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Bootstrap Components & Utilities Guide</strong> | Created with Bootstrap 5, HTML5, and CSS3</p>
+            <p>Build responsive, mobile-first projects with the world's most popular front-end toolkit</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and sections
+                tabBtns.forEach(b => b.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // Add active class to clicked button
+                btn.classList.add('active');
+
+                // Show corresponding section
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Initialize Bootstrap components
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
+
+        // Button builder functionality
+        const styleSelect = document.getElementById('button-style');
+        const sizeSelect = document.getElementById('button-size');
+        const outlineCheck = document.getElementById('button-outline');
+        const roundedCheck = document.getElementById('button-rounded');
+        const textInput = document.getElementById('button-text');
+        const buttonPreview = document.getElementById('button-preview');
+        const buttonClasses = document.getElementById('button-classes');
+
+        function updateButton() {
+            const style = styleSelect.value;
+            const size = sizeSelect.value;
+            const isOutline = outlineCheck.checked;
+            const isRounded = roundedCheck.checked;
+            const text = textInput.value;
+
+            let classes = 'btn';
+
+            if (isOutline) {
+                classes += ` btn-outline-${style}`;
+            } else {
+                classes += ` btn-${style}`;
+            }
+
+            if (size) {
+                classes += ` btn-${size}`;
+            }
+
+            if (isRounded) {
+                classes += ' rounded-pill';
+            }
+
+            buttonPreview.className = classes;
+            buttonPreview.textContent = text;
+            buttonClasses.textContent = classes.replace('btn ', '');
+        }
+
+        styleSelect.addEventListener('change', updateButton);
+        sizeSelect.addEventListener('change', updateButton);
+        outlineCheck.addEventListener('change', updateButton);
+        roundedCheck.addEventListener('change', updateButton);
+        textInput.addEventListener('input', updateButton);
+
+        // Initialize button
+        updateButton();
+
+        // Utility playground
+        const marginSelect = document.getElementById('margin-select');
+        const paddingSelect = document.getElementById('padding-select');
+        const borderSelect = document.getElementById('border-select');
+        const borderColor = document.getElementById('border-color');
+        const shadowSelect = document.getElementById('shadow-select');
+        const bgSelect = document.getElementById('bg-select');
+        const utilityPreview = document.getElementById('utility-preview');
+        const utilityClasses = document.getElementById('utility-classes');
+
+        function updateUtilityPreview() {
+            const classes = [
+                marginSelect.value,
+                paddingSelect.value,
+                borderSelect.value,
+                borderColor.value,
+                shadowSelect.value,
+                bgSelect.value
+            ].filter(cls => cls).join(' ');
+
+            utilityPreview.className = 'd-inline-block ' + classes;
+            utilityClasses.textContent = classes;
+        }
+
+        marginSelect.addEventListener('change', updateUtilityPreview);
+        paddingSelect.addEventListener('change', updateUtilityPreview);
+        borderSelect.addEventListener('change', updateUtilityPreview);
+        borderColor.addEventListener('change', updateUtilityPreview);
+        shadowSelect.addEventListener('change', updateUtilityPreview);
+        bgSelect.addEventListener('change', updateUtilityPreview);
+
+        // Initialize utility preview
+        updateUtilityPreview();
+    </script>
+</body>
+</html>

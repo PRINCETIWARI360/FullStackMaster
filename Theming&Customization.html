@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Theming & Customization</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bs-primary: #6f42c1;
+            --bs-secondary: #6610f2;
+            --bs-success: #198754;
+            --bs-info: #0dcaf0;
+            --bs-warning: #ffc107;
+            --bs-danger: #dc3545;
+            --bs-light: #f8f9fa;
+            --bs-dark: #212529;
+            --custom-primary: #6f42c1;
+            --custom-secondary: #6610f2;
+            --custom-radius: 0.5rem;
+            --custom-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding-top: 20px;
+            padding-bottom: 50px;
+            min-height: 100vh;
+        }
+
+        .guide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: var(--custom-shadow);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--custom-primary), var(--custom-secondary), #0dcaf0);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--custom-primary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--custom-secondary);
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: var(--custom-radius);
+            box-shadow: var(--custom-shadow);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--custom-primary);
+        }
+
+        .section-header i {
+            background: var(--custom-primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: #212529;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--custom-secondary);
+            margin: 25px 0 15px;
+        }
+
+        .theme-card {
+            background: #f8f9fa;
+            border-radius: var(--custom-radius);
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid var(--custom-primary);
+            transition: all 0.3s ease;
+        }
+
+        .theme-card:hover {
+            transform: translateX(10px);
+        }
+
+        .custom-component {
+            background: white;
+            border-radius: var(--custom-radius);
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-btn {
+            background: var(--custom-primary);
+            border: none;
+            border-radius: var(--custom-radius);
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .custom-btn:hover {
+            background: var(--custom-secondary);
+            transform: translateY(-3px);
+            box-shadow: var(--custom-shadow);
+        }
+
+        .color-box {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            border-radius: 4px;
+            margin-right: 10px;
+            border: 1px solid #dee2e6;
+        }
+
+        .theme-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .control-group {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--custom-radius);
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .form-range {
+            width: 100%;
+        }
+
+        .custom-alert {
+            border-radius: var(--custom-radius);
+            box-shadow: var(--custom-shadow);
+        }
+
+        .custom-card {
+            border-radius: var(--custom-radius);
+            overflow: hidden;
+            box-shadow: var(--custom-shadow);
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .custom-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .custom-nav {
+            border-radius: var(--custom-radius);
+            box-shadow: var(--custom-shadow);
+            padding: 10px;
+            background: white;
+        }
+
+        .theme-preview {
+            background: white;
+            border-radius: var(--custom-radius);
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-item {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: var(--custom-radius);
+            background: #f8f9fa;
+        }
+
+        .sass-code {
+            background: #2d3748;
+            color: #f7f9fc;
+            padding: 20px;
+            border-radius: var(--custom-radius);
+            font-family: monospace;
+            line-height: 1.8;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .sass-code::before {
+            content: "SCSS";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--custom-primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 var(--custom-radius);
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        .code-property {
+            color: #f6ad55;
+        }
+
+        .code-value {
+            color: #68d391;
+        }
+
+        .code-selector {
+            color: #63b3ed;
+        }
+
+        .theme-badge {
+            background: var(--custom-primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            .section-header i {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="guide-container">
+        <header>
+            <h1>Bootstrap Theming & Customization</h1>
+            <p class="tagline">Personalize Bootstrap to match your brand identity</p>
+        </header>
+
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-palette"></i>
+                <h2>CSS Variable Theming</h2>
+            </div>
+
+            <p>Bootstrap 5 makes extensive use of CSS custom properties (variables) for its design system. You can override these variables to create your own theme.</p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="theme-card">
+                        <h3>Color Customization</h3>
+                        <p>Change the core theme colors by overriding the primary and secondary variables:</p>
+                        <div class="sass-code">
+                            :root {<br>
+                            &nbsp;&nbsp;<span class="code-property">--bs-primary</span>: <span class="code-value">#6f42c1</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">--bs-secondary</span>: <span class="code-value">#6610f2</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">--bs-success</span>: <span class="code-value">#198754</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">--bs-info</span>: <span class="code-value">#0dcaf0</span>;<br>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="theme-card">
+                        <h3>Component Customization</h3>
+                        <p>Customize specific components using CSS variables:</p>
+                        <div class="sass-code">
+                            :root {<br>
+                            &nbsp;&nbsp;<span class="code-property">--bs-border-radius</span>: <span class="code-value">0.5rem</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">--bs-box-shadow</span>: <span class="code-value">0 0.5rem 1rem rgba(0, 0, 0, 0.15)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">--bs-btn-border-radius</span>: <span class="code-value">0.5rem</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">--bs-card-border-radius</span>: <span class="code-value">0.5rem</span>;<br>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Interactive Theme Editor</h3>
+            <p>Adjust the theme variables and see the changes in real-time:</p>
+
+            <div class="theme-controls">
+                <div class="control-group">
+                    <label for="primaryColor">Primary Color</label>
+                    <input type="color" id="primaryColor" class="form-control form-control-color" value="#6f42c1" title="Choose primary color">
+                </div>
+
+                <div class="control-group">
+                    <label for="secondaryColor">Secondary Color</label>
+                    <input type="color" id="secondaryColor" class="form-control form-control-color" value="#6610f2" title="Choose secondary color">
+                </div>
+
+                <div class="control-group">
+                    <label for="borderRadius">Border Radius: <span id="radiusValue">0.5rem</span></label>
+                    <input type="range" class="form-range" id="borderRadius" min="0" max="2" step="0.1" value="0.5">
+                </div>
+
+                <div class="control-group">
+                    <label for="shadowIntensity">Shadow Intensity: <span id="shadowValue">0.15</span></label>
+                    <input type="range" class="form-range" id="shadowIntensity" min="0" max="0.5" step="0.05" value="0.15">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-swatchbook"></i>
+                <h2>SASS Customization</h2>
+            </div>
+
+            <p>For advanced customization, Bootstrap's SASS variables allow you to modify the source files before compilation.</p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="theme-card">
+                        <h3>Modifying SASS Variables</h3>
+                        <p>Create a custom SCSS file to override Bootstrap's defaults:</p>
+                        <div class="sass-code">
+                            <span class="code-comment">// Custom.scss</span><br>
+                            <span class="code-comment">// Option A: Include all of Bootstrap</span><br><br>
+
+                            <span class="code-keyword">@import</span> <span class="code-value">"../node_modules/bootstrap/scss/bootstrap"</span>;<br><br>
+
+                            <span class="code-comment">// Then add overrides below</span><br>
+                            <span class="code-property">$primary</span>: <span class="code-value">#6f42c1</span>;<br>
+                            <span class="code-property">$secondary</span>: <span class="code-value">#6610f2</span>;<br>
+                            <span class="code-property">$border-radius</span>: <span class="code-value">0.5rem</span>;<br>
+                            <span class="code-property">$box-shadow</span>: <span class="code-value">0 .5rem 1rem rgba($black, .15)</span>;<br>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="theme-card">
+                        <h3>Creating Custom Utilities</h3>
+                        <p>Extend Bootstrap with your own utilities using SASS:</p>
+                        <div class="sass-code">
+                            <span class="code-comment">// Custom utilities</span><br>
+                            <span class="code-property">$custom-theme-colors</span>: (<br>
+                            &nbsp;&nbsp;<span class="code-value">"custom-primary"</span>: <span class="code-value">$primary</span>,<br>
+                            &nbsp;&nbsp;<span class="code-value">"custom-secondary"</span>: <span class="code-value">$secondary</span>,<br>
+                            &nbsp;&nbsp;<span class="code-value">"custom-light"</span>: <span class="code-value">$gray-100</span><br>
+                            );<br><br>
+
+                            <span class="code-comment">// Merge with default theme colors</span><br>
+                            <span class="code-property">$theme-colors</span>: <span class="code-value">map-merge($theme-colors, $custom-theme-colors)</span>;<br><br>
+
+                            <span class="code-comment">// Generate utilities</span><br>
+                            <span class="code-keyword">@each</span> <span class="code-property">$key</span>, <span class="code-property">$val</span> in <span class="code-value">$custom-theme-colors</span> {<br>
+                            &nbsp;&nbsp;<span class="code-selector">.bg-#{$key}</span> {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-property">background-color</span>: <span class="code-value">#{$val}</span> <span class="code-comment">!important</span>;<br>
+                            &nbsp;&nbsp;}<br>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-cubes"></i>
+                <h2>Component Customization</h2>
+            </div>
+
+            <p>Customize Bootstrap components by overriding their styles or creating new variations.</p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="custom-component">
+                        <h3>Custom Buttons</h3>
+                        <p>Create custom button styles with your theme colors:</p>
+                        <button class="btn custom-btn me-2">Primary Button</button>
+                        <button class="btn btn-outline-custom me-2">Outline Button</button>
+                        <button class="btn btn-gradient">Gradient Button</button>
+
+                        <div class="sass-code mt-3">
+                            <span class="code-selector">.custom-btn</span> {<br>
+                            &nbsp;&nbsp;<span class="code-property">background-color</span>: <span class="code-value">var(--custom-primary)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">border-radius</span>: <span class="code-value">var(--custom-radius)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">box-shadow</span>: <span class="code-value">var(--custom-shadow)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">transition</span>: <span class="code-value">all 0.3s ease</span>;<br>
+                            }<br><br>
+
+                            <span class="code-selector">.btn-outline-custom</span> {<br>
+                            &nbsp;&nbsp;<span class="code-property">border-color</span>: <span class="code-value">var(--custom-primary)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">color</span>: <span class="code-value">var(--custom-primary)</span>;<br>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="custom-component">
+                        <h3>Custom Cards</h3>
+                        <div class="card custom-card">
+                            <div class="card-header bg-custom text-white">
+                                Custom Card
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Card with custom styling</h5>
+                                <p class="card-text">This card uses our theme colors and custom border radius.</p>
+                                <button class="btn custom-btn">Learn More</button>
+                            </div>
+                        </div>
+
+                        <div class="sass-code mt-3">
+                            <span class="code-selector">.custom-card</span> {<br>
+                            &nbsp;&nbsp;<span class="code-property">border-radius</span>: <span class="code-value">var(--custom-radius)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">overflow</span>: <span class="code-value">hidden</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">box-shadow</span>: <span class="code-value">var(--custom-shadow)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">transition</span>: <span class="code-value">all 0.3s ease</span>;<br>
+                            }<br><br>
+
+                            <span class="code-selector">.bg-custom</span> {<br>
+                            &nbsp;&nbsp;<span class="code-property">background</span>: <span class="code-value">linear-gradient(to right, var(--custom-primary), var(--custom-secondary))</span> <span class="code-comment">!important</span>;<br>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="custom-component">
+                        <h3>Custom Navigation</h3>
+                        <ul class="nav custom-nav">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Pricing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">About</a>
+                            </li>
+                        </ul>
+
+                        <div class="sass-code mt-3">
+                            <span class="code-selector">.custom-nav</span> {<br>
+                            &nbsp;&nbsp;<span class="code-property">border-radius</span>: <span class="code-value">var(--custom-radius)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">box-shadow</span>: <span class="code-value">var(--custom-shadow)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">background</span>: <span class="code-value">white</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">padding</span>: <span class="code-value">10px</span>;<br>
+                            }<br><br>
+
+                            <span class="code-selector">.custom-nav .nav-link.active</span> {<br>
+                            &nbsp;&nbsp;<span class="code-property">background</span>: <span class="code-value">var(--custom-primary)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">color</span>: <span class="code-value">white</span> <span class="code-comment">!important</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">border-radius</span>: <span class="code-value">calc(var(--custom-radius) - 5px)</span>;<br>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="custom-component">
+                        <h3>Custom Alerts</h3>
+                        <div class="alert alert-primary custom-alert" role="alert">
+                            This is a custom primary alert
+                        </div>
+                        <div class="alert alert-custom custom-alert" role="alert">
+                            Custom gradient alert
+                        </div>
+
+                        <div class="sass-code mt-3">
+                            <span class="code-selector">.custom-alert</span> {<br>
+                            &nbsp;&nbsp;<span class="code-property">border-radius</span>: <span class="code-value">var(--custom-radius)</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">box-shadow</span>: <span class="code-value">var(--custom-shadow)</span>;<br>
+                            }<br><br>
+
+                            <span class="code-selector">.alert-custom</span> {<br>
+                            &nbsp;&nbsp;<span class="code-property">background</span>: <span class="code-value">linear-gradient(to right, var(--custom-primary), var(--custom-secondary))</span>;<br>
+                            &nbsp;&nbsp;<span class="code-property">color</span>: <span class="code-value">white</span>;<br>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-eye"></i>
+                <h2>Theme Preview</h2>
+            </div>
+
+            <p>See how your custom theme looks applied to various Bootstrap components:</p>
+
+            <div class="theme-preview">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="preview-item">
+                            <h4>Buttons</h4>
+                            <button class="btn btn-primary me-2">Primary</button>
+                            <button class="btn btn-secondary me-2">Secondary</button>
+                            <button class="btn btn-success me-2">Success</button>
+                            <button class="btn btn-danger me-2">Danger</button>
+                        </div>
+
+                        <div class="preview-item">
+                            <h4>Alerts</h4>
+                            <div class="alert alert-primary">Primary alert</div>
+                            <div class="alert alert-secondary">Secondary alert</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="preview-item">
+                            <h4>Badges</h4>
+                            <span class="badge bg-primary me-2">Primary</span>
+                            <span class="badge bg-secondary me-2">Secondary</span>
+                            <span class="badge bg-success me-2">Success</span>
+                            <span class="theme-badge me-2">Custom</span>
+                        </div>
+
+                        <div class="preview-item">
+                            <h4>Progress Bars</h4>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 25%"></div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-secondary" role="progressbar" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview-item">
+                    <h4>Card</h4>
+                    <div class="card" style="width: 100%;">
+                        <div class="card-header">
+                            Featured
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Card Title</h5>
+                            <p class="card-text">This card uses the current theme settings for styling.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Bootstrap Theming & Customization Guide</strong> | Created with Bootstrap 5 and Custom CSS</p>
+            <p>Your brand deserves a unique look - customize Bootstrap to match your identity!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Theme customization controls
+        const primaryColor = document.getElementById('primaryColor');
+        const secondaryColor = document.getElementById('secondaryColor');
+        const borderRadius = document.getElementById('borderRadius');
+        const shadowIntensity = document.getElementById('shadowIntensity');
+        const radiusValue = document.getElementById('radiusValue');
+        const shadowValue = document.getElementById('shadowValue');
+
+        // Update CSS variables when controls change
+        function updateTheme() {
+            document.documentElement.style.setProperty('--custom-primary', primaryColor.value);
+            document.documentElement.style.setProperty('--custom-secondary', secondaryColor.value);
+            document.documentElement.style.setProperty('--custom-radius', `${borderRadius.value}rem`);
+            document.documentElement.style.setProperty('--custom-shadow', `0 0.5rem 1rem rgba(0, 0, 0, ${shadowIntensity.value})`);
+
+            // Update display values
+            radiusValue.textContent = `${borderRadius.value}rem`;
+            shadowValue.textContent = shadowIntensity.value;
+
+            // Update Bootstrap primary and secondary colors
+            document.documentElement.style.setProperty('--bs-primary', primaryColor.value);
+            document.documentElement.style.setProperty('--bs-secondary', secondaryColor.value);
+        }
+
+        // Add event listeners
+        primaryColor.addEventListener('input', updateTheme);
+        secondaryColor.addEventListener('input', updateTheme);
+        borderRadius.addEventListener('input', updateTheme);
+        shadowIntensity.addEventListener('input', updateTheme);
+
+        // Initialize theme
+        updateTheme();
+
+        // Add gradient button effect
+        const gradientBtn = document.querySelector('.btn-gradient');
+        gradientBtn.addEventListener('mouseenter', function() {
+            this.style.background = `linear-gradient(to right, ${primaryColor.value}, ${secondaryColor.value})`;
+        });
+
+        gradientBtn.addEventListener('mouseleave', function() {
+            this.style.background = '';
+        });
+    </script>
+</body>
+</html>

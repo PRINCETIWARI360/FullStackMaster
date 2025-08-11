@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Forms & Input Elements Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--success));
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .card-header i {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "HTML";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        .code-tag {
+            color: #63b3ed;
+        }
+
+        .code-attr {
+            color: #f6ad55;
+        }
+
+        .code-value {
+            color: #68d391;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .input-item {
+            background: #f8f9fa;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            background: #e9ecef;
+            border-color: var(--accent);
+        }
+
+        .input-item h4 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-item h4 i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .input-demo {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .form-demo {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .form-result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid var(--success);
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        .interactive-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .interactive-btn {
+            flex: 1;
+            min-width: 200px;
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1.1rem;
+        }
+
+        .interactive-btn:hover {
+            background: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .input-tip {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f4fc;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>HTML Forms & Input Elements</h1>
+            <p class="tagline">The Complete Guide to Web Form Development</p>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-window-restore"></i>
+                    <h2>Understanding HTML Forms</h2>
+                </div>
+
+                <p>HTML forms are essential for collecting user input on websites. They enable everything from simple contact forms to complex e-commerce checkouts.</p>
+
+                <h3><i class="fas fa-code"></i> The Form Element</h3>
+                <p>The <code>&lt;form&gt;</code> element defines an area where users can input data. Key attributes:</p>
+                <ul>
+                    <li><strong>action</strong>: URL where form data is sent</li>
+                    <li><strong>method</strong>: HTTP method (GET or POST)</li>
+                    <li><strong>autocomplete</strong>: Enable/disable autocomplete</li>
+                    <li><strong>novalidate</strong>: Disable browser validation</li>
+                </ul>
+
+                <div class="code-block">
+                    <span class="code-tag">&lt;form</span> <span class="code-attr">action=</span><span class="code-value">"/submit"</span>
+                    <span class="code-attr">method=</span><span class="code-value">"post"</span>
+                    <span class="code-attr">autocomplete=</span><span class="code-value">"on"</span><span class="code-tag">&gt;</span>
+                    <span class="code-comment">&lt;!-- Form elements go here --&gt;</span>
+                    <span class="code-tag">&lt;/form&gt;</span>
+                </div>
+
+                <h3><i class="fas fa-lightbulb"></i> Form Best Practices</h3>
+                <ul>
+                    <li>Always include labels for accessibility</li>
+                    <li>Group related fields with fieldset and legend</li>
+                    <li>Use appropriate input types for better mobile experience</li>
+                    <li>Provide clear validation messages</li>
+                    <li>Make forms keyboard accessible</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-keyboard"></i>
+                    <h2>Common Input Types</h2>
+                </div>
+
+                <p>HTML5 introduced many new input types that improve user experience and data validation.</p>
+
+                <h3><i class="fas fa-text-height"></i> Text Inputs</h3>
+                <p>Used for single-line text input:</p>
+                <div class="code-block">
+                    <span class="code-comment">&lt;!-- Standard text input --&gt;</span>
+                    <span class="code-tag">&lt;input</span> <span class="code-attr">type=</span><span class="code-value">"text"</span> <span class="code-attr">id=</span><span class="code-value">"name"</span> <span class="code-attr">placeholder=</span><span class="code-value">"Enter your name"</span><span class="code-tag">&gt;</span>
+
+                    <span class="code-comment">&lt;!-- Password field --&gt;</span>
+                    <span class="code-tag">&lt;input</span> <span class="code-attr">type=</span><span class="code-value">"password"</span> <span class="code-attr">id=</span><span class="code-value">"password"</span> <span class="code-attr">placeholder=</span><span class="code-value">"Create password"</span><span class="code-tag">&gt;</span>
+
+                    <span class="code-comment">&lt;!-- Email with validation --&gt;</span>
+                    <span class="code-tag">&lt;input</span> <span class="code-attr">type=</span><span class="code-value">"email"</span> <span class="code-attr">id=</span><span class="code-value">"email"</span> <span class="code-attr">placeholder=</span><span class="code-value">"your@email.com"</span><span class="code-tag">&gt;</span>
+                </div>
+
+                <h3><i class="fas fa-mouse-pointer"></i> Selection Inputs</h3>
+                <p>For choosing from predefined options:</p>
+                <div class="code-block">
+                    <span class="code-comment">&lt;!-- Radio buttons --&gt;</span>
+                    <span class="code-tag">&lt;input</span> <span class="code-attr">type=</span><span class="code-value">"radio"</span> <span class="code-attr">id=</span><span class="code-value">"option1"</span> <span class="code-attr">name=</span><span class="code-value">"choice"</span> <span class="code-attr">value=</span><span class="code-value">"1"</span><span class="code-tag">&gt;</span>
+                    <span class="code-tag">&lt;label</span> <span class="code-attr">for=</span><span class="code-value">"option1"</span><span class="code-tag">&gt;</span>Option 1<span class="code-tag">&lt;/label&gt;</span>
+
+                    <span class="code-comment">&lt;!-- Checkboxes --&gt;</span>
+                    <span class="code-tag">&lt;input</span> <span class="code-attr">type=</span><span class="code-value">"checkbox"</span> <span class="code-attr">id=</span><span class="code-value">"check1"</span> <span class="code-attr">name=</span><span class="code-value">"checks"</span> <span class="code-attr">value=</span><span class="code-value">"A"</span><span class="code-tag">&gt;</span>
+                    <span class="code-tag">&lt;label</span> <span class="code-attr">for=</span><span class="code-value">"check1"</span><span class="code-tag">&gt;</span>Choice A<span class="code-tag">&lt;/label&gt;</span>
+
+                    <span class="code-comment">&lt;!-- Dropdown select --&gt;</span>
+                    <span class="code-tag">&lt;select</span> <span class="code-attr">id=</span><span class="code-value">"country"</span> <span class="code-attr">name=</span><span class="code-value">"country"</span><span class="code-tag">&gt;</span>
+                    &nbsp;&nbsp;<span class="code-tag">&lt;option</span> <span class="code-attr">value=</span><span class="code-value">""</span><span class="code-tag">&gt;</span>Select country<span class="code-tag">&lt;/option&gt;</span>
+                    &nbsp;&nbsp;<span class="code-tag">&lt;option</span> <span class="code-attr">value=</span><span class="code-value">"us"</span><span class="code-tag">&gt;</span>United States<span class="code-tag">&lt;/option&gt;</span>
+                    <span class="code-tag">&lt;/select&gt;</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-sliders-h"></i>
+                <h2>Input Elements Reference</h2>
+            </div>
+
+            <div class="input-grid">
+                <div class="input-item">
+                    <h4><i class="fas fa-font"></i> Text Input</h4>
+                    <p>Standard single-line text field</p>
+                    <div class="input-demo">
+                        <input type="text" placeholder="Enter your name">
+                    </div>
+                </div>
+
+                <div class="input-item">
+                    <h4><i class="fas fa-envelope"></i> Email Input</h4>
+                    <p>Validates email format automatically</p>
+                    <div class="input-demo">
+                        <input type="email" placeholder="your@email.com">
+                    </div>
+                </div>
+
+                <div class="input-item">
+                    <h4><i class="fas fa-key"></i> Password Input</h4>
+                    <p>Masks characters for security</p>
+                    <div class="input-demo">
+                        <input type="password" placeholder="Create password">
+                    </div>
+                </div>
+
+                <div class="input-item">
+                    <h4><i class="fas fa-calendar"></i> Date Picker</h4>
+                    <p>Browser-native date selector</p>
+                    <div class="input-demo">
+                        <input type="date">
+                    </div>
+                </div>
+
+                <div class="input-item">
+                    <h4><i class="fas fa-toggle-on"></i> Range Slider</h4>
+                    <p>Select a value from a range</p>
+                    <div class="input-demo">
+                        <input type="range" min="0" max="100" value="50">
+                    </div>
+                </div>
+
+                <div class="input-item">
+                    <h4><i class="fas fa-check-circle"></i> Checkboxes</h4>
+                    <p>Select multiple options</p>
+                    <div class="input-demo">
+                        <input type="checkbox" id="check1">
+                        <label for="check1">Option 1</label>
+                        <input type="checkbox" id="check2">
+                        <label for="check2">Option 2</label>
+                    </div>
+                </div>
+
+                <div class="input-item">
+                    <h4><i class="fas fa-dot-circle"></i> Radio Buttons</h4>
+                    <p>Select one option from a group</p>
+                    <div class="input-demo">
+                        <input type="radio" id="radio1" name="radio-group">
+                        <label for="radio1">Choice A</label>
+                        <input type="radio" id="radio2" name="radio-group">
+                        <label for="radio2">Choice B</label>
+                    </div>
+                </div>
+
+                <div class="input-item">
+                    <h4><i class="fas fa-file"></i> File Upload</h4>
+                    <p>Select files from your device</p>
+                    <div class="input-demo">
+                        <input type="file">
+                    </div>
+                </div>
+
+                <div class="input-item">
+                    <h4><i class="fas fa-list"></i> Dropdown Select</h4>
+                    <p>Select from multiple options</p>
+                    <div class="input-demo">
+                        <select>
+                            <option>Select an option</option>
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-item">
+                    <h4><i class="fas fa-align-left"></i> Textarea</h4>
+                    <p>Multi-line text input</p>
+                    <div class="input-demo">
+                        <textarea placeholder="Enter your message" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-demo">
+            <div class="card-header">
+                <i class="fas fa-edit"></i>
+                <h2>Interactive Form Demo</h2>
+            </div>
+
+            <p>Try out this form to see how different input elements work together:</p>
+
+            <form id="demoForm" class="form-container">
+                <div class="form-group">
+                    <label for="fullName"><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" id="fullName" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="userEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="userEmail" placeholder="your@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="userPassword"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="userPassword" placeholder="Create a password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="userPhone"><i class="fas fa-phone"></i> Phone Number</label>
+                    <input type="tel" id="userPhone" placeholder="(123) 456-7890">
+                </div>
+
+                <div class="form-group">
+                    <label for="userBirthdate"><i class="fas fa-birthday-cake"></i> Birthdate</label>
+                    <input type="date" id="userBirthdate">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-venus-mars"></i> Gender</label>
+                    <div style="display: flex; gap: 15px; margin-top: 8px;">
+                        <div>
+                            <input type="radio" id="genderMale" name="gender" value="male">
+                            <label for="genderMale">Male</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="genderFemale" name="gender" value="female">
+                            <label for="genderFemale">Female</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="genderOther" name="gender" value="other">
+                            <label for="genderOther">Other</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="userCountry"><i class="fas fa-globe"></i> Country</label>
+                    <select id="userCountry">
+                        <option value="">Select your country</option>
+                        <option value="us">United States</option>
+                        <option value="ca">Canada</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="au">Australia</option>
+                        <option value="in">India</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-heart"></i> Interests</label>
+                    <div style="margin-top: 8px;">
+                        <div>
+                            <input type="checkbox" id="interestTech" value="technology">
+                            <label for="interestTech">Technology</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="interestSports" value="sports">
+                            <label for="interestSports">Sports</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="interestMusic" value="music">
+                            <label for="interestMusic">Music</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="interestTravel" value="travel">
+                            <label for="interestTravel">Travel</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="userMessage"><i class="fas fa-comment"></i> Message</label>
+                    <textarea id="userMessage" placeholder="Enter your message here..." rows="4"></textarea>
+                </div>
+
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="userFile"><i class="fas fa-file-upload"></i> Upload Profile Picture</label>
+                    <input type="file" id="userFile">
+                </div>
+
+                <div class="form-actions" style="grid-column: 1 / -1;">
+                    <button type="submit"><i class="fas fa-paper-plane"></i> Submit Form</button>
+                    <button type="reset" style="background: #95a5a6;"><i class="fas fa-redo"></i> Reset Form</button>
+                </div>
+            </form>
+
+            <div id="formResult" class="form-result">
+                <h3>Form Submitted Successfully!</h3>
+                <p>Your information has been received. Thank you for submitting the form.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>HTML Forms & Input Elements Guide</strong> | Created with HTML5, CSS3, and JavaScript</p>
+            <p>Remember: Well-designed forms are essential for great user experiences!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Form submission handler
+        document.getElementById('demoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Show success message
+            const resultDiv = document.getElementById('formResult');
+            resultDiv.style.display = 'block';
+
+            // Scroll to result
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Reset form handler
+        document.querySelector('button[type="reset"]').addEventListener('click', function() {
+            document.getElementById('formResult').style.display = 'none';
+        });
+
+        // Interactive input tips
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                // Create or show tip element
+                let tip = this.nextElementSibling;
+                if (!tip || !tip.classList.contains('input-tip')) {
+                    tip = document.createElement('div');
+                    tip.className = 'input-tip';
+                    this.parentNode.insertBefore(tip, this.nextSibling);
+                }
+
+                // Set tip content based on input type
+                const inputType = this.type || this.tagName.toLowerCase();
+                let tipContent = '';
+
+                switch(inputType) {
+                    case 'text':
+                        tipContent = '💡 Tip: Use text inputs for names, addresses, and other short text entries.';
+                        break;
+                    case 'email':
+                        tipContent = '💡 Tip: Email inputs automatically validate email formats.';
+                        break;
+                    case 'password':
+                        tipContent = '💡 Tip: Always use strong passwords with a mix of letters, numbers, and symbols.';
+                        break;
+                    case 'date':
+                        tipContent = '💡 Tip: Date inputs show a calendar picker on supported browsers.';
+                        break;
+                    case 'select-one':
+                        tipContent = '💡 Tip: Dropdowns are great for long lists of options.';
+                        break;
+                    case 'textarea':
+                        tipContent = '💡 Tip: Textareas are perfect for longer messages and comments.';
+                        break;
+                    case 'file':
+                        tipContent = '💡 Tip: You can restrict file types using the accept attribute.';
+                        break;
+                    default:
+                        tipContent = '💡 Tip: Fill in this field with appropriate information.';
+                }
+
+                tip.textContent = tipContent;
+                tip.style.display = 'block';
+            });
+
+            input.addEventListener('blur', function() {
+                // Hide tip when input loses focus
+                const tip = this.nextElementSibling;
+                if (tip && tip.classList.contains('input-tip')) {
+                    tip.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

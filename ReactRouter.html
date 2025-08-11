@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Router Guide</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/react-router-dom@5.3.0/umd/react-router-dom.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --router: #9b59b6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--router), var(--accent), var(--success));
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            color: var(--router);
+            margin-bottom: 20px;
+        }
+
+        .app-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .navbar {
+            display: flex;
+            background: var(--router);
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            width: 100%;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 20px 25px;
+            display: block;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-links a.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: white;
+        }
+
+        .hamburger {
+            display: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 20px;
+            align-self: center;
+        }
+
+        .content {
+            padding: 30px;
+            min-height: 400px;
+        }
+
+        .page {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--router);
+        }
+
+        .page p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .page ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        .page li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .page li::before {
+            content: "•";
+            color: var(--router);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            border: 2px solid var(--router);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card h3 i {
+            color: var(--router);
+        }
+
+        .user-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .user-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            border-left: 4px solid var(--router);
+        }
+
+        .user-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-card h3 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .user-card p {
+            margin-bottom: 5px;
+        }
+
+        .user-card a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 15px;
+            background: var(--router);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .user-card a:hover {
+            background: var(--accent);
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "JSX";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--router);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .code-keyword {
+            color: #f6ad55;
+        }
+
+        .code-function {
+            color: #63b3ed;
+        }
+
+        .code-variable {
+            color: #68d391;
+        }
+
+        .code-value {
+            color: #ecc94b;
+        }
+
+        .info-card {
+            background: #e3f2fd;
+            border-left: 4px solid var(--router);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-card h4 {
+            color: var(--router);
+            margin-bottom: 10px;
+        }
+
+        .not-found {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        .not-found h2 {
+            font-size: 6rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .not-found p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .not-found a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--router);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .not-found a:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                display: none;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: block;
+                align-self: flex-end;
+            }
+
+            .nav-links a {
+                padding: 15px 20px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .tagline {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            header {
+                padding: 30px 15px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .page h2 {
+                font-size: 1.8rem;
+            }
+
+            .not-found h2 {
+                font-size: 4rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-route"></i> React Router Guide</h1>
+            <p class="tagline">Declarative routing for React applications</p>
+        </header>
+
+        <div id="root"></div>
+
+        <footer>
+            <p><strong>React Router Guide</strong> | Created with HTML, CSS, and JavaScript</p>
+            <p>Learn routing to build powerful single-page applications!</p>
+        </footer>
+    </div>
+
+    <script type="text/babel">
+        const { BrowserRouter, Route, Switch, Link, useParams, useRouteMatch, Redirect } = ReactRouterDOM;
+
+        // Home Component
+        function Home() {
+            return (
+                <div className="page">
+                    <h2><i class="fas fa-home"></i> Welcome to React Router</h2>
+                    <p>React Router is a collection of navigational components that compose declaratively with your application. Whether you want to have bookmarkable URLs for your web app or a composable way to navigate in React Native, React Router works wherever React is rendering.</p>
+
+                    <div className="info-card">
+                        <h4><i class="fas fa-lightbulb"></i> Key Features</h4>
+                        <p>React Router enables client-side routing which allows your app to update the page the user sees without making a request to the server.</p>
+                    </div>
+
+                    <div className="features-grid">
+                        <div className="feature-card">
+                            <h3><i class="fas fa-link"></i> Declarative Routing</h3>
+                            <p>Define your routes using JSX components, making it easy to visualize your app's structure.</p>
+                        </div>
+                        <div className="feature-card">
+                            <h3><i class="fas fa-sync-alt"></i> Dynamic Routing</h3>
+                            <p>Create routes that match dynamic patterns and extract parameters from URLs.</p>
+                        </div>
+                        <div className="feature-card">
+                            <h3><i class="fas fa-layer-group"></i> Nested Routing</h3>
+                            <p>Build complex UIs with routes that nest inside each other, each rendering its own component.</p>
+                        </div>
+                    </div>
+
+                    <h3>Getting Started</h3>
+                    <div className="code-block">
+                        <span className="code-comment">// Install React Router</span>
+                        <span className="code-variable">npm</span> <span className="code-function">install</span> react-router-dom
+                        <br/><br/>
+                        <span className="code-comment">// Basic router setup</span>
+                        <span className="code-keyword">import</span> {'{ BrowserRouter as Router, Switch, Route, Link }'} <span className="code-keyword">from</span> <span className="code-value">'react-router-dom'</span>;
+                        <br/><br/>
+                        <span className="code-keyword">function</span> <span className="code-function">App</span>() {'{'}
+                        &nbsp;&nbsp;<span className="code-keyword">return</span> (
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">Router</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">nav</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">Link</span> <span className="code-variable">to</span>=<span className="code-value">"/"</span>&gt;Home&lt;/<span className="code-variable">Link</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">Link</span> <span className="code-variable">to</span>=<span className="code-value">"/about"</span>&gt;About&lt;/<span className="code-variable">Link</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span className="code-variable">nav</span>&gt;
+                        <br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">Switch</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">Route</span> <span className="code-variable">exact</span> <span className="code-variable">path</span>=<span className="code-value">"/"</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">Home</span> /&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span className="code-variable">Route</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">Route</span> <span className="code-variable">path</span>=<span className="code-value">"/about"</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">About</span> /&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span className="code-variable">Route</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span className="code-variable">Switch</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span className="code-variable">Router</span>&gt;
+                        &nbsp;&nbsp;);
+                        {'}'}
+                    </div>
+                </div>
+            );
+        }
+
+        // About Component
+        function About() {
+            return (
+                <div className="page">
+                    <h2><i class="fas fa-info-circle"></i> About React Router</h2>
+                    <p>React Router is the standard routing library for React. From the docs: "React Router keeps your UI in sync with the URL. It has a simple API with powerful features like lazy code loading, dynamic route matching, and location transition handling built right in."</p>
+
+                    <div className="info-card">
+                        <h4><i class="fas fa-history"></i> History</h4>
+                        <p>React Router was started in 2014 by Ryan Florence and Michael Jackson. It was inspired by Ember Router and has since become the most popular routing solution for React applications.</p>
+                    </div>
+
+                    <h3>Core Components</h3>
+                    <ul>
+                        <li><strong>BrowserRouter</strong>: Uses HTML5 history API to keep UI in sync with URL</li>
+                        <li><strong>Route</strong>: Renders UI when path matches current URL</li>
+                        <li><strong>Link</strong>: Provides declarative, accessible navigation</li>
+                        <li><strong>Switch</strong>: Renders first child Route/Redirect that matches</li>
+                        <li><strong>Redirect</strong>: Navigates to new location</li>
+                    </ul>
+
+                    <h3>Advanced Features</h3>
+                    <div className="features-grid">
+                        <div className="feature-card">
+                            <h3><i class="fas fa-code-branch"></i> Code Splitting</h3>
+                            <p>React Router works seamlessly with React.lazy() for code splitting and lazy loading.</p>
+                        </div>
+                        <div className="feature-card">
+                            <h3><i class="fas fa-shield-alt"></i> Route Protection</h3>
+                            <p>Easily create protected routes that require authentication using render props.</p>
+                        </div>
+                        <div className="feature-card">
+                            <h3><i class="fas fa-cogs"></i> Hooks API</h3>
+                            <p>Access routing information with hooks like useParams, useHistory, and useLocation.</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Users Component
+        function Users() {
+            // Sample user data
+            const users = [
+                { id: 1, name: "Prince Tiwari", email: "tiwariprince340@gmail.com" },
+                { id: 2, name: "Ankit Singh", email: "Aniketkr123@gmail.com" },
+                { id: 3, name: "Pushpendra", email: "Pushpendra@gmail.com" },
+                { id: 4, name: "Krishna Tiwary", email: "Krish123@gmail.com" }
+            ];
+
+            return (
+                <div className="page">
+                    <h2><i class="fas fa-users"></i> User Directory</h2>
+                    <p>This page demonstrates dynamic routing. Click on any user to view their profile page with details loaded from route parameters.</p>
+
+                    <div className="user-list">
+                        {users.map(user => (
+                            <div className="user-card" key={user.id}>
+                                <h3>{user.name}</h3>
+                                <p><i class="fas fa-envelope"></i> {user.email}</p>
+                                <Link to={`/users/${user.id}`}>View Profile</Link>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="info-card">
+                        <h4><i class="fas fa-cogs"></i> How It Works</h4>
+                        <p>The user profile route uses a dynamic segment <code>/users/:userId</code> that matches any URL pattern starting with /users/ followed by any value. The value is captured as a parameter that can be accessed in the component.</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // UserProfile Component
+        function UserProfile() {
+            // Get userId from URL parameters
+            const { userId } = useParams();
+
+            // Sample user data
+            const users = {
+                1: { name: "Prince Tiwari", email: "tiwariprince340@gmail.com", bio: "Frontend developer with 5 years of experience. Loves React and JavaScript." },
+                2: { name: "Aniket Singh", email: "Aniket123@gmail.com", bio: "UX designer passionate about creating beautiful and functional interfaces." },
+                3: { name: "Pushpendra ", email: "pushpendra123@gmail.com", bio: "Backend engineer specializing in Node.js and database architecture." },
+                4: { name: "Krishna Tiwary", email: "Krish123@gmail.com", bio: "Full-stack developer with expertise in React, Node, and cloud infrastructure." }
+            };
+
+            const user = users[userId];
+
+            if (!user) {
+                return <Redirect to="/not-found" />;
+            }
+
+            return (
+                <div className="page">
+                    <h2><i class="fas fa-user"></i> {user.name}'s Profile</h2>
+                    <p>This page demonstrates how to extract parameters from the URL using React Router's useParams hook.</p>
+
+                    <div className="user-card" style={{ maxWidth: '500px', margin: '30px auto' }}>
+                        <h3>{user.name}</h3>
+                        <p><i class="fas fa-envelope"></i> {user.email}</p>
+                        <p><i class="fas fa-file-alt"></i> {user.bio}</p>
+                        <Link to="/users">Back to Users</Link>
+                    </div>
+
+                    <div className="code-block">
+                        <span className="code-comment">// Using useParams to access route parameters</span>
+                        <span className="code-keyword">import</span> {'{ useParams }'} <span className="code-keyword">from</span> <span className="code-value">'react-router-dom'</span>;
+                        <br/><br/>
+                        <span className="code-keyword">function</span> <span className="code-function">UserProfile</span>() {'{'}
+                        &nbsp;&nbsp;<span className="code-keyword">const</span> {'{ userId }'} = <span className="code-function">useParams</span>();
+                        &nbsp;&nbsp;<span className="code-comment">// Fetch user data based on userId</span>
+                        &nbsp;&nbsp;<span className="code-keyword">return</span> (
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">div</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="code-variable">h2</span>&gt;User {'{'}userId{'}'}&lt;/<span className="code-variable">h2</span>&gt;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span className="code-variable">div</span>&gt;
+                        &nbsp;&nbsp;);
+                        {'}'}
+                    </div>
+                </div>
+            );
+        }
+
+        // Contact Component
+        function Contact() {
+            return (
+                <div className="page">
+                    <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+                    <p>Have questions about React Router? Reach out to us through the channels below.</p>
+
+                    <div className="features-grid">
+                        <div className="feature-card">
+                            <h3><i class="fab fa-github"></i> GitHub</h3>
+                            <p>Report issues, suggest features, or contribute to the project on GitHub.</p>
+                            <p><strong>URL:</strong> github.com/Princetiwari360/react-router</p>
+                        </div>
+                        <div className="feature-card">
+                            <h3><i class="fab fa-stack-overflow"></i> Stack Overflow</h3>
+                            <p>Get help from the community by asking questions on Stack Overflow.</p>
+                            <p><strong>Tag:</strong> PrinceTiwari</p>
+                        </div>
+                        <div className="feature-card">
+                            <h3><i class="fab fa-twitter"></i> Twitter</h3>
+                            <p>Follow the maintainers for updates and announcements.</p>
+                            <p><strong>Handle:</strong> @PrinceTiwariBR</p>
+                        </div>
+                    </div>
+
+                    <h3>Documentation</h3>
+                    <p>The official React Router documentation is comprehensive and includes guides, API references, and examples:</p>
+                    <div className="code-block">
+                        <span className="code-value">https://reactrouter.com/</span>
+                    </div>
+                </div>
+            );
+        }
+
+        // NotFound Component
+        function NotFound() {
+            return (
+                <div className="page">
+                    <div className="not-found">
+                        <h2>404</h2>
+                        <p>Oops! The page you're looking for doesn't exist.</p>
+                        <Link to="/">Return to Homepage</Link>
+                    </div>
+                </div>
+            );
+        }
+
+        // Navbar Component
+        function Navbar() {
+            const [menuActive, setMenuActive] = React.useState(false);
+            const location = ReactRouterDOM.useLocation();
+
+            const toggleMenu = () => {
+                setMenuActive(!menuActive);
+            };
+
+            // Close menu when route changes
+            React.useEffect(() => {
+                setMenuActive(false);
+            }, [location]);
+
+            return (
+                <nav className="navbar">
+                    <div className="hamburger" onClick={toggleMenu}>
+                        <i className={menuActive ? "fas fa-times" : "fas fa-bars"}></i>
+                    </div>
+                    <ul className={`nav-links ${menuActive ? 'active' : ''}`}>
+                        <li>
+                            <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
+                                <i className="fas fa-home"></i> Home
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/about" className={location.pathname === '/about' ? 'active' : ''}>
+                                <i className="fas fa-info-circle"></i> About
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/users" className={location.pathname.startsWith('/users') ? 'active' : ''}>
+                                <i className="fas fa-users"></i> Users
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>
+                                <i className="fas fa-envelope"></i> Contact
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
+            );
+        }
+
+        // Main App Component
+        function App() {
+            return (
+                <BrowserRouter>
+                    <div className="app-container">
+                        <Navbar />
+                        <div className="content">
+                            <Switch>
+                                <Route exact path="/">
+                                    <Home />
+                                </Route>
+                                <Route path="/about">
+                                    <About />
+                                </Route>
+                                <Route exact path="/users">
+                                    <Users />
+                                </Route>
+                                <Route path="/users/:userId">
+                                    <UserProfile />
+                                </Route>
+                                <Route path="/contact">
+                                    <Contact />
+                                </Route>
+                                <Route path="*">
+                                    <NotFound />
+                                </Route>
+                            </Switch>
+                        </div>
+                    </div>
+                </BrowserRouter>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

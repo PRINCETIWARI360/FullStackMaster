@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Selectors & Box Model Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --purple: #9b59b6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--success));
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section-header i {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "CSS";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        .code-selector {
+            color: #63b3ed;
+        }
+
+        .code-property {
+            color: #f6ad55;
+        }
+
+        .code-value {
+            color: #68d391;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 2px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .card h4 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h4 i {
+            color: var(--primary);
+        }
+
+        .box-model-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            position: relative;
+            height: 300px;
+        }
+
+        .box-layer {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-style: solid;
+            transition: all 0.5s;
+        }
+
+        .margin-layer {
+            width: 100%;
+            height: 100%;
+            border-color: #3498db;
+            border-width: 20px;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .border-layer {
+            width: 80%;
+            height: 80%;
+            border-color: #2ecc71;
+            border-width: 15px;
+            background: rgba(46, 204, 113, 0.1);
+        }
+
+        .padding-layer {
+            width: 60%;
+            height: 60%;
+            border-color: #f39c12;
+            border-width: 15px;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .content-layer {
+            width: 40%;
+            height: 40%;
+            background: #e74c3c;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .value-display {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .selector-demo {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .demo-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .demo-html, .demo-result {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .demo-result {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .box {
+            padding: 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            background: #ecf0f1;
+            text-align: center;
+        }
+
+        .box.highlight {
+            background: #e74c3c;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .box.special {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .box:first-child {
+            background: #2ecc71;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            .box-model-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSS Selectors & Box Model</h1>
+            <p class="tagline">Master the Fundamentals of CSS</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="selectors">
+                <i class="fas fa-code"></i> CSS Selectors
+            </button>
+            <button class="tab-btn" data-tab="box-model">
+                <i class="fas fa-cube"></i> Box Model
+            </button>
+            <button class="tab-btn" data-tab="examples">
+                <i class="fas fa-laptop-code"></i> Interactive Examples
+            </button>
+        </div>
+
+        <div id="selectors" class="content-section active">
+            <div class="section-header">
+                <i class="fas fa-code"></i>
+                <h2>CSS Selectors</h2>
+            </div>
+
+            <p>CSS selectors are used to select the HTML elements you want to style. Understanding selectors is key to writing efficient CSS.</p>
+
+            <h3><i class="fas fa-star"></i> Basic Selectors</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-asterisk"></i> Universal Selector</h4>
+                    <p>Selects all elements on the page</p>
+                    <div class="code-block">
+                        <span class="code-selector">*</span> {
+                        <span class="code-property">box-sizing</span>: <span class="code-value">border-box</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-tag"></i> Type Selector</h4>
+                    <p>Selects all elements of the given type</p>
+                    <div class="code-block">
+                        <span class="code-selector">p</span> {
+                        <span class="code-property">color</span>: <span class="code-value">#333</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-dot-circle"></i> Class Selector</h4>
+                    <p>Selects elements with the given class</p>
+                    <div class="code-block">
+                        <span class="code-selector">.highlight</span> {
+                        <span class="code-property">background</span>: <span class="code-value">yellow</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-id-card"></i> ID Selector</h4>
+                    <p>Selects the element with the given ID</p>
+                    <div class="code-block">
+                        <span class="code-selector">#header</span> {
+                        <span class="code-property">padding</span>: <span class="code-value">20px</span>;
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-project-diagram"></i> Combinators</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-sitemap"></i> Descendant Selector</h4>
+                    <p>Selects elements that are descendants</p>
+                    <div class="code-block">
+                        <span class="code-selector">div p</span> {
+                        <span class="code-property">color</span>: <span class="code-value">blue</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-chevron-right"></i> Child Selector</h4>
+                    <p>Selects direct children elements</p>
+                    <div class="code-block">
+                        <span class="code-selector">div > p</span> {
+                        <span class="code-property">font-weight</span>: <span class="code-value">bold</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-plus"></i> Adjacent Sibling</h4>
+                    <p>Selects immediately following sibling</p>
+                    <div class="code-block">
+                        <span class="code-selector">h2 + p</span> {
+                        <span class="code-property">margin-top</span>: <span class="code-value">0</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-code-branch"></i> General Sibling</h4>
+                    <p>Selects all following siblings</p>
+                    <div class="code-block">
+                        <span class="code-selector">h2 ~ p</span> {
+                        <span class="code-property">color</span>: <span class="code-value">green</span>;
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-magic"></i> Pseudo-classes & Elements</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-hand-pointer"></i> :hover</h4>
+                    <p>Styles when mouse is over element</p>
+                    <div class="code-block">
+                        <span class="code-selector">a:hover</span> {
+                        <span class="code-property">color</span>: <span class="code-value">red</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-list"></i> :nth-child()</h4>
+                    <p>Selects elements based on position</p>
+                    <div class="code-block">
+                        <span class="code-selector">li:nth-child(odd)</span> {
+                        <span class="code-property">background</span>: <span class="code-value">#eee</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-exclamation-circle"></i> :not()</h4>
+                    <p>Selects elements that do not match</p>
+                    <div class="code-block">
+                        <span class="code-selector">div:not(.special)</span> {
+                        <span class="code-property">border</span>: <span class="code-value">1px solid #ccc</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-quote-right"></i> ::before & ::after</h4>
+                    <p>Inserts content before/after element</p>
+                    <div class="code-block">
+                        <span class="code-selector">.note::before</span> {
+                        <span class="code-property">content</span>: <span class="code-value">"Note: "</span>;
+                        <span class="code-property">font-weight</span>: <span class="code-value">bold</span>;
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="box-model" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-cube"></i>
+                <h2>CSS Box Model</h2>
+            </div>
+
+            <p>Every element in CSS is a rectangular box with content, padding, border, and margin properties.</p>
+
+            <div class="box-model-container">
+                <div class="box-layer margin-layer">
+                    Margin
+                    <div class="box-layer border-layer">
+                        Border
+                        <div class="box-layer padding-layer">
+                            Padding
+                            <div class="content-layer">
+                                Content
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="margin-slider">Margin: <span id="margin-value" class="value-display">20px</span></label>
+                    <input type="range" id="margin-slider" class="slider" min="0" max="50" value="20">
+                </div>
+
+                <div class="control-group">
+                    <label for="border-slider">Border: <span id="border-value" class="value-display">15px</span></label>
+                    <input type="range" id="border-slider" class="slider" min="0" max="30" value="15">
+                </div>
+
+                <div class="control-group">
+                    <label for="padding-slider">Padding: <span id="padding-value" class="value-display">15px</span></label>
+                    <input type="range" id="padding-slider" class="slider" min="0" max="40" value="15">
+                </div>
+
+                <div class="control-group">
+                    <label for="content-slider">Content: <span id="content-value" class="value-display">40%</span></label>
+                    <input type="range" id="content-slider" class="slider" min="20" max="60" value="40">
+                </div>
+            </div>
+
+            <h3><i class="fas fa-ruler-combined"></i> Box Model Properties</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-square"></i> Content</h4>
+                    <p>The actual content of the element (text, images, etc.)</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">width</span>: <span class="code-value">300px</span>;
+                        <span class="code-property">height</span>: <span class="code-value">200px</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-expand-arrows-alt"></i> Padding</h4>
+                    <p>Space between content and border (inside the element)</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">padding</span>: <span class="code-value">20px</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-border-style"></i> Border</h4>
+                    <p>Outline around the padding and content</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">border</span>: <span class="code-value">2px solid #3498db</span>;
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-vector-square"></i> Margin</h4>
+                    <p>Space outside the border (between elements)</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">margin</span>: <span class="code-value">30px</span>;
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-calculator"></i> Box-Sizing</h3>
+            <p>The box-sizing property controls how width and height are calculated.</p>
+
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-ruler"></i> Content Box</h4>
+                    <p>Default value. Width/height only includes content.</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">box-sizing</span>: <span class="code-value">content-box</span>;
+                        <span class="code-property">width</span>: <span class="code-value">300px</span>;
+                        <span class="code-property">padding</span>: <span class="code-value">20px</span>;
+                        <span class="code-comment">/* Total width = 300px + 40px */</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-border-all"></i> Border Box</h4>
+                    <p>Width/height includes content, padding and border.</p>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">box-sizing</span>: <span class="code-value">border-box</span>;
+                        <span class="code-property">width</span>: <span class="code-value">300px</span>;
+                        <span class="code-property">padding</span>: <span class="code-value">20px</span>;
+                        <span class="code-comment">/* Total width = 300px */</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="examples" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-laptop-code"></i>
+                <h2>Interactive Examples</h2>
+            </div>
+
+            <h3><i class="fas fa-mouse-pointer"></i> Selector Playground</h3>
+            <p>See how different CSS selectors affect elements:</p>
+
+            <div class="selector-demo">
+                <div class="demo-container">
+                    <div class="demo-html">
+                        <h4>HTML Structure:</h4>
+                        <div class="code-block">
+                            &lt;div class="container"&gt;
+                            &lt;div class="box"&gt;Box 1&lt;/div&gt;
+                            &lt;div class="box highlight"&gt;Box 2&lt;/div&gt;
+                            &lt;div class="box special"&gt;Box 3&lt;/div&gt;
+                            &lt;div class="box"&gt;Box 4&lt;/div&gt;
+                            &lt;/div&gt;
+                        </div>
+
+                        <div class="controls">
+                            <div class="control-group" style="width: 100%;">
+                                <label for="selector-input">CSS Selector:</label>
+                                <input type="text" id="selector-input" class="slider" value=".highlight">
+                                <button id="apply-selector" class="control-btn" style="width: 100%; margin-top: 10px;">
+                                    <i class="fas fa-play"></i> Apply Selector
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="demo-result">
+                        <h4>Result:</h4>
+                        <div class="box">Box 1</div>
+                        <div class="box highlight">Box 2</div>
+                        <div class="box special">Box 3</div>
+                        <div class="box">Box 4</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-edit"></i> Box Model Editor</h3>
+            <p>Adjust the box model properties and see the CSS code:</p>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="box-width">Width: <span id="width-value" class="value-display">300px</span></label>
+                    <input type="range" id="box-width" class="slider" min="100" max="500" value="300">
+                </div>
+
+                <div class="control-group">
+                    <label for="box-padding">Padding: <span id="box-padding-value" class="value-display">20px</span></label>
+                    <input type="range" id="box-padding" class="slider" min="0" max="50" value="20">
+                </div>
+
+                <div class="control-group">
+                    <label for="box-border">Border: <span id="box-border-value" class="value-display">5px</span></label>
+                    <input type="range" id="box-border" class="slider" min="0" max="20" value="5">
+                </div>
+
+                <div class="control-group">
+                    <label for="box-margin">Margin: <span id="box-margin-value" class="value-display">30px</span></label>
+                    <input type="range" id="box-margin" class="slider" min="0" max="50" value="30">
+                </div>
+            </div>
+
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-eye"></i> Preview</h4>
+                    <div id="box-preview" style="background: #3498db; color: white; text-align: center; padding: 20px; margin: 20px auto; border-radius: 8px;">
+                        CSS Box Model
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-code"></i> Generated CSS</h4>
+                    <div class="code-block">
+                        <span class="code-selector">.box</span> {
+                        <span class="code-property">width</span>: <span id="css-width" class="code-value">300px</span>;
+                        <span class="code-property">padding</span>: <span id="css-padding" class="code-value">20px</span>;
+                        <span class="code-property">border</span>: <span id="css-border" class="code-value">5px solid #333</span>;
+                        <span class="code-property">margin</span>: <span id="css-margin" class="code-value">30px</span>;
+                        <span class="code-property">box-sizing</span>: <span class="code-value">content-box</span>;
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>CSS Selectors & Box Model Guide</strong> | Created with HTML5, CSS3, and JavaScript</p>
+            <p>Mastering these fundamentals is key to becoming a CSS expert!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and sections
+                tabBtns.forEach(b => b.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // Add active class to clicked button
+                btn.classList.add('active');
+
+                // Show corresponding section
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Box model controls
+        const marginSlider = document.getElementById('margin-slider');
+        const borderSlider = document.getElementById('border-slider');
+        const paddingSlider = document.getElementById('padding-slider');
+        const contentSlider = document.getElementById('content-slider');
+
+        const marginValue = document.getElementById('margin-value');
+        const borderValue = document.getElementById('border-value');
+        const paddingValue = document.getElementById('padding-value');
+        const contentValue = document.getElementById('content-value');
+
+        const marginLayer = document.querySelector('.margin-layer');
+        const borderLayer = document.querySelector('.border-layer');
+        const paddingLayer = document.querySelector('.padding-layer');
+        const contentLayer = document.querySelector('.content-layer');
+
+        function updateBoxModel() {
+            const margin = marginSlider.value;
+            const border = borderSlider.value;
+            const padding = paddingSlider.value;
+            const content = contentSlider.value;
+
+            // Update display values
+            marginValue.textContent = margin + 'px';
+            borderValue.textContent = border + 'px';
+            paddingValue.textContent = padding + 'px';
+            contentValue.textContent = content + '%';
+
+            // Update box model
+            marginLayer.style.borderWidth = margin + 'px';
+            borderLayer.style.borderWidth = border + 'px';
+            paddingLayer.style.borderWidth = padding + 'px';
+            contentLayer.style.width = content + '%';
+            contentLayer.style.height = content + '%';
+        }
+
+        marginSlider.addEventListener('input', updateBoxModel);
+        borderSlider.addEventListener('input', updateBoxModel);
+        paddingSlider.addEventListener('input', updateBoxModel);
+        contentSlider.addEventListener('input', updateBoxModel);
+
+        // Initialize box model
+        updateBoxModel();
+
+        // Selector playground
+        const selectorInput = document.getElementById('selector-input');
+        const applySelectorBtn = document.getElementById('apply-selector');
+        const demoBoxes = document.querySelectorAll('.demo-result .box');
+
+        applySelectorBtn.addEventListener('click', () => {
+            const selector = selectorInput.value;
+
+            // Remove highlight from all boxes
+            demoBoxes.forEach(box => {
+                box.classList.remove('highlight');
+            });
+
+            try {
+                // Apply highlight to selected elements
+                const selectedBoxes = document.querySelectorAll(selector);
+                selectedBoxes.forEach(box => {
+                    if (box.classList.contains('box')) {
+                        box.classList.add('highlight');
+                    }
+                });
+            } catch (e) {
+                alert('Invalid selector: ' + e.message);
+            }
+        });
+
+        // Box model editor
+        const widthSlider = document.getElementById('box-width');
+        const paddingSliderBox = document.getElementById('box-padding');
+        const borderSliderBox = document.getElementById('box-border');
+        const marginSliderBox = document.getElementById('box-margin');
+
+        const widthValue = document.getElementById('width-value');
+        const paddingValueBox = document.getElementById('box-padding-value');
+        const borderValueBox = document.getElementById('box-border-value');
+        const marginValueBox = document.getElementById('box-margin-value');
+
+        const boxPreview = document.getElementById('box-preview');
+        const cssWidth = document.getElementById('css-width');
+        const cssPadding = document.getElementById('css-padding');
+        const cssBorder = document.getElementById('css-border');
+        const cssMargin = document.getElementById('css-margin');
+
+        function updateBoxPreview() {
+            const width = widthSlider.value;
+            const padding = paddingSliderBox.value;
+            const border = borderSliderBox.value;
+            const margin = marginSliderBox.value;
+
+            // Update display values
+            widthValue.textContent = width + 'px';
+            paddingValueBox.textContent = padding + 'px';
+            borderValueBox.textContent = border + 'px';
+            marginValueBox.textContent = margin + 'px';
+
+            // Update CSS code
+            cssWidth.textContent = width + 'px';
+            cssPadding.textContent = padding + 'px';
+            cssBorder.textContent = border + 'px solid #333';
+            cssMargin.textContent = margin + 'px';
+
+            // Update preview box
+            boxPreview.style.width = width + 'px';
+            boxPreview.style.padding = padding + 'px';
+            boxPreview.style.borderWidth = border + 'px';
+            boxPreview.style.margin = margin + 'px';
+        }
+
+        widthSlider.addEventListener('input', updateBoxPreview);
+        paddingSliderBox.addEventListener('input', updateBoxPreview);
+        borderSliderBox.addEventListener('input', updateBoxPreview);
+        marginSliderBox.addEventListener('input', updateBoxPreview);
+
+        // Initialize box preview
+        updateBoxPreview();
+    </script>
+</body>
+</html>

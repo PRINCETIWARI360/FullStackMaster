@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asynchronous JavaScript Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --async: #9b59b6;
+            --callback: #e67e22;
+            --promise: #3498db;
+            --await: #2ecc71;
+            --event-loop: #f1c40f;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--async), var(--accent), var(--success));
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--async);
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--async);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--async);
+        }
+
+        .section-header i {
+            background: var(--async);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--async);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 i {
+            background: var(--async);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: 30px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--async);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "JS";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--async);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 0 0 0 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .code-keyword {
+            color: #f6ad55;
+        }
+
+        .code-function {
+            color: #63b3ed;
+        }
+
+        .code-variable {
+            color: #68d391;
+        }
+
+        .code-value {
+            color: #ecc94b;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 2px solid var(--async);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .card h4 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h4 i {
+            color: var(--async);
+        }
+
+        .visualization {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .event-loop-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .event-loop {
+            height: 300px;
+            border: 3px solid var(--async);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            background: #f0f8ff;
+            display: flex;
+        }
+
+        .event-loop-label {
+            position: absolute;
+            font-weight: bold;
+            color: var(--secondary);
+            top: 10px;
+            left: 10px;
+        }
+
+        .call-stack {
+            width: 30%;
+            height: 100%;
+            border-right: 3px dashed var(--async);
+            padding: 40px 10px 10px;
+            position: relative;
+        }
+
+        .web-apis {
+            width: 40%;
+            height: 100%;
+            border-right: 3px dashed var(--async);
+            padding: 40px 10px 10px;
+            position: relative;
+        }
+
+        .callback-queue {
+            width: 30%;
+            height: 100%;
+            padding: 40px 10px 10px;
+            position: relative;
+        }
+
+        .event-block {
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: white;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+            position: absolute;
+            width: 90%;
+            transition: all 0.5s ease-in-out;
+            left: 5%;
+            top: 50px;
+        }
+
+        .block-callback {
+            background: var(--callback);
+        }
+
+        .block-promise {
+            background: var(--promise);
+        }
+
+        .block-await {
+            background: var(--await);
+        }
+
+        .interactive-area {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background: var(--async);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2d3748;
+            color: white;
+            border-radius: 8px;
+            min-height: 100px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .console-output {
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            white-space: pre;
+        }
+
+        .console-line {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .console-timestamp {
+            color: #6a9955;
+        }
+
+        .console-message {
+            color: #d4d4d4;
+        }
+
+        .console-error {
+            color: #f44747;
+        }
+
+        .api-response {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 100px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        .info-card {
+            background: #e3f2fd;
+            border-left: 4px solid var(--async);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-card h4 {
+            color: var(--async);
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tab-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .event-loop {
+                height: 250px;
+            }
+
+            .event-block {
+                font-size: 0.8rem;
+                padding: 8px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .section-header i {
+                margin-bottom: 15px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .event-loop-label {
+                font-size: 0.8rem;
+            }
+
+            .event-loop {
+                flex-direction: column;
+                height: 500px;
+            }
+
+            .call-stack, .web-apis, .callback-queue {
+                width: 100%;
+                height: 33.33%;
+                border-right: none;
+                border-bottom: 3px dashed var(--async);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-sync-alt"></i> Asynchronous JavaScript</h1>
+            <p class="tagline">Master non-blocking operations in JavaScript</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="callbacks">
+                <i class="fas fa-redo"></i> Callbacks
+            </button>
+            <button class="tab-btn" data-tab="promises">
+                <i class="fas fa-handshake"></i> Promises
+            </button>
+            <button class="tab-btn" data-tab="async-await">
+                <i class="fas fa-bolt"></i> Async/Await
+            </button>
+            <button class="tab-btn" data-tab="fetch">
+                <i class="fas fa-cloud-download-alt"></i> Fetch API
+            </button>
+            <button class="tab-btn" data-tab="event-loop">
+                <i class="fas fa-infinity"></i> Event Loop
+            </button>
+        </div>
+
+        <div id="callbacks" class="content-section active">
+            <div class="section-header">
+                <i class="fas fa-redo"></i>
+                <h2>Callback Functions</h2>
+            </div>
+
+            <p>Callbacks are functions passed as arguments to other functions and executed later. They are the traditional way to handle asynchronous operations in JavaScript.</p>
+
+            <div class="info-card">
+                <h4><i class="fas fa-exclamation-triangle"></i> Callback Hell</h4>
+                <p>Deeply nested callbacks can lead to "callback hell" - code that is hard to read and maintain. This is also known as the "pyramid of doom".</p>
+            </div>
+
+            <h3><i class="fas fa-code"></i> Callback Example</h3>
+            <div class="interactive-area">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="callback-delay">Simulate Delay (ms):</label>
+                        <input type="number" id="callback-delay" value="1500">
+                    </div>
+
+                    <div class="control-group">
+                        <button id="run-callback">
+                            <i class="fas fa-play"></i> Run Callback
+                        </button>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <span class="code-comment">// Simulate fetching user data</span>
+                    <span class="code-keyword">function</span> <span class="code-function">getUser</span>(id, callback) {
+                    &nbsp;&nbsp;<span class="code-variable">setTimeout</span>(() => {
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-value">`Fetching user ${id}...`</span>);
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">callback</span>({ <span class="code-variable">id</span>: id, <span class="code-variable">name</span>: <span class="code-value">'John Doe'</span> });
+                    &nbsp;&nbsp;}, <span class="code-value">1500</span>);
+                    }
+                    <br>
+                    <span class="code-comment">// Using the callback</span>
+                    <span class="code-function">getUser</span>(<span class="code-value">1</span>, (user) => {
+                    &nbsp;&nbsp;<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-value">`User: ${user.name}`</span>);
+                    });
+                </div>
+
+                <div class="console-output" id="callback-output">
+                    // Console output will appear here
+                </div>
+            </div>
+        </div>
+
+        <div id="promises" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-handshake"></i>
+                <h2>Promises</h2>
+            </div>
+
+            <p>Promises represent the eventual completion (or failure) of an asynchronous operation and its resulting value. They provide a cleaner way to handle async operations.</p>
+
+            <div class="info-card">
+                <h4><i class="fas fa-check-circle"></i> Promise States</h4>
+                <p>A promise can be in one of three states: pending, fulfilled, or rejected. Once settled, a promise cannot change its state.</p>
+            </div>
+
+            <h3><i class="fas fa-code"></i> Promise Example</h3>
+            <div class="interactive-area">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="promise-delay">Simulate Delay (ms):</label>
+                        <input type="number" id="promise-delay" value="2000">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="promise-success">Should Succeed:</label>
+                        <select id="promise-success">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="run-promise">
+                            <i class="fas fa-play"></i> Run Promise
+                        </button>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <span class="code-comment">// Create a promise</span>
+                    <span class="code-keyword">const</span> <span class="code-variable">myPromise</span> = <span class="code-keyword">new</span> <span class="code-function">Promise</span>((resolve, reject) => {
+                    &nbsp;&nbsp;<span class="code-variable">setTimeout</span>(() => {
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> (success) {
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">resolve</span>(<span class="code-value">'Promise resolved successfully!'</span>);
+                    &nbsp;&nbsp;&nbsp;&nbsp;} <span class="code-keyword">else</span> {
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">reject</span>(<span class="code-keyword">new</span> <span class="code-function">Error</span>(<span class="code-value">'Promise rejected!'</span>));
+                    &nbsp;&nbsp;&nbsp;&nbsp;}
+                    &nbsp;&nbsp;}, delay);
+                    });
+                    <br>
+                    <span class="code-comment">// Handle the promise</span>
+                    <span class="code-variable">myPromise</span>
+                    &nbsp;&nbsp;.<span class="code-function">then</span>(result => <span class="code-variable">console</span>.<span class="code-function">log</span>(result))
+                    &nbsp;&nbsp;.<span class="code-function">catch</span>(error => <span class="code-variable">console</span>.<span class="code-function">error</span>(error.<span class="code-variable">message</span>));
+                </div>
+
+                <div class="console-output" id="promise-output">
+                    // Console output will appear here
+                </div>
+            </div>
+
+            <h3><i class="fas fa-project-diagram"></i> Promise Methods</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <h4><i class="fas fa-allergies"></i> Promise.all()</h4>
+                    <p>Waits for all promises to resolve or any to reject.</p>
+                    <div class="code-block">
+                        <span class="code-variable">Promise</span>.<span class="code-function">all</span>([promise1, promise2])
+                        &nbsp;&nbsp;.<span class="code-function">then</span>(values => {
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Array of results</span>
+                        &nbsp;&nbsp;});
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-trophy"></i> Promise.race()</h4>
+                    <p>Waits until any of the promises resolves or rejects.</p>
+                    <div class="code-block">
+                        <span class="code-variable">Promise</span>.<span class="code-function">race</span>([promise1, promise2])
+                        &nbsp;&nbsp;.<span class="code-function">then</span>(value => {
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// First resolved value</span>
+                        &nbsp;&nbsp;});
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><i class="fas fa-check-double"></i> Promise.allSettled()</h4>
+                    <p>Waits until all promises have settled (either resolved or rejected).</p>
+                    <div class="code-block">
+                        <span class="code-variable">Promise</span>.<span class="code-function">allSettled</span>([promise1, promise2])
+                        &nbsp;&nbsp;.<span class="code-function">then</span>(results => {
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Array of result objects</span>
+                        &nbsp;&nbsp;});
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="async-await" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-bolt"></i>
+                <h2>Async/Await</h2>
+            </div>
+
+            <p>Async/Await is syntactic sugar built on top of promises. It allows you to write asynchronous code that looks and behaves like synchronous code.</p>
+
+            <div class="info-card">
+                <h4><i class="fas fa-lightbulb"></i> Key Points</h4>
+                <ul>
+                    <li><code>async</code> makes a function return a promise</li>
+                    <li><code>await</code> makes a function wait for a promise</li>
+                    <li>Use try/catch blocks for error handling</li>
+                </ul>
+            </div>
+
+            <h3><i class="fas fa-code"></i> Async/Await Example</h3>
+            <div class="interactive-area">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="async-delay">Simulate Delay (ms):</label>
+                        <input type="number" id="async-delay" value="1000">
+                    </div>
+
+                    <div class="control-group">
+                        <button id="run-async">
+                            <i class="fas fa-play"></i> Run Async Code
+                        </button>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <span class="code-comment">// Simulate fetching data</span>
+                    <span class="code-keyword">function</span> <span class="code-function">fetchData</span>() {
+                    &nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-keyword">new</span> <span class="code-function">Promise</span>(resolve => {
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-variable">setTimeout</span>(() => {
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">resolve</span>(<span class="code-value">'Data retrieved successfully!'</span>);
+                    &nbsp;&nbsp;&nbsp;&nbsp;}, delay);
+                    &nbsp;&nbsp;});
+                    }
+                    <br>
+                    <span class="code-comment">// Using async/await</span>
+                    <span class="code-keyword">async</span> <span class="code-keyword">function</span> <span class="code-function">getData</span>() {
+                    &nbsp;&nbsp;<span class="code-keyword">try</span> {
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-variable">result</span> = <span class="code-keyword">await</span> <span class="code-function">fetchData</span>();
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-variable">console</span>.<span class="code-function">log</span>(result);
+                    &nbsp;&nbsp;} <span class="code-keyword">catch</span> (error) {
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-variable">console</span>.<span class="code-function">error</span>(error);
+                    &nbsp;&nbsp;}
+                    }
+                    <br>
+                    <span class="code-function">getData</span>();
+                </div>
+
+                <div class="console-output" id="async-output">
+                    // Console output will appear here
+                </div>
+            </div>
+
+            <h3><i class="fas fa-exchange-alt"></i> Comparison</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Callbacks</th>
+                        <th>Promises</th>
+                        <th>Async/Await</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Readability</td>
+                        <td>Poor (Callback Hell)</td>
+                        <td>Better (Chaining)</td>
+                        <td>Best (Synchronous-like)</td>
+                    </tr>
+                    <tr>
+                        <td>Error Handling</td>
+                        <td>Error-first callbacks</td>
+                        <td>.catch() method</td>
+                        <td>try/catch blocks</td>
+                    </tr>
+                    <tr>
+                        <td>Browser Support</td>
+                        <td>All browsers</td>
+                        <td>ES6+</td>
+                        <td>ES2017+</td>
+                    </tr>
+                    <tr>
+                        <td>Return Value</td>
+                        <td>None</td>
+                        <td>Promise object</td>
+                        <td>Promise object</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="fetch" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-cloud-download-alt"></i>
+                <h2>Fetch API</h2>
+            </div>
+
+            <p>The Fetch API provides a modern interface for fetching resources across the network. It returns promises, making it easier to work with asynchronous requests.</p>
+
+            <div class="info-card">
+                <h4><i class="fas fa-info-circle"></i> Fetch vs XMLHttpRequest</h4>
+                <p>Fetch is simpler and more powerful than the older XMLHttpRequest. It provides a cleaner API and uses promises.</p>
+            </div>
+
+            <h3><i class="fas fa-code"></i> Fetch Example</h3>
+            <div class="interactive-area">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="api-select">Select API:</label>
+                        <select id="api-select">
+                            <option value="https://jsonplaceholder.typicode.com/posts/1">JSONPlaceholder Post</option>
+                            <option value="https://api.github.com/users/octocat">GitHub User</option>
+                            <option value="https://dog.ceo/api/breeds/image/random">Random Dog Image</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="run-fetch">
+                            <i class="fas fa-download"></i> Fetch Data
+                        </button>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <span class="code-keyword">async</span> <span class="code-keyword">function</span> <span class="code-function">fetchData</span>(url) {
+                    &nbsp;&nbsp;<span class="code-keyword">try</span> {
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-variable">response</span> = <span class="code-keyword">await</span> <span class="code-variable">fetch</span>(url);
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> (!<span class="code-variable">response</span>.<span class="code-variable">ok</span>) {
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-function">Error</span>(<span class="code-value">`HTTP error! status: ${response.status}`</span>);
+                    &nbsp;&nbsp;&nbsp;&nbsp;}
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> <span class="code-variable">data</span> = <span class="code-keyword">await</span> <span class="code-variable">response</span>.<span class="code-function">json</span>();
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-variable">data</span>;
+                    &nbsp;&nbsp;} <span class="code-keyword">catch</span> (error) {
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-variable">console</span>.<span class="code-function">error</span>(<span class="code-value">'Fetch error:'</span>, error);
+                    &nbsp;&nbsp;}
+                    }
+                </div>
+
+                <div class="console-output" id="fetch-console">
+                    // Console output will appear here
+                </div>
+
+                <div class="api-response" id="fetch-response">
+                    // API response will appear here
+                </div>
+            </div>
+        </div>
+
+        <div id="event-loop" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-infinity"></i>
+                <h2>Event Loop</h2>
+            </div>
+
+            <p>The Event Loop is what allows JavaScript to be non-blocking despite being single-threaded. It handles the execution of code, collecting and processing events, and executing queued sub-tasks.</p>
+
+            <div class="info-card">
+                <h4><i class="fas fa-cogs"></i> How it Works</h4>
+                <p>JavaScript has a call stack, a callback queue, and Web APIs. The event loop constantly checks if the call stack is empty. If it is, it takes the first task from the callback queue and pushes it to the call stack.</p>
+            </div>
+
+            <h3><i class="fas fa-sync-alt"></i> Event Loop Visualization</h3>
+            <div class="event-loop-container">
+                <div class="event-loop">
+                    <div class="call-stack">
+                        <div class="event-loop-label">Call Stack</div>
+                        <div class="event-block block-callback" id="stack-main">main()</div>
+                    </div>
+                    <div class="web-apis">
+                        <div class="event-loop-label">Web APIs</div>
+                        <div class="event-block block-promise" id="api-timeout" style="opacity:0;">setTimeout()</div>
+                    </div>
+                    <div class="callback-queue">
+                        <div class="event-loop-label">Callback Queue</div>
+                        <div class="event-block block-await" id="queue-callback" style="opacity:0;">callback()</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <div class="control-group">
+                        <button id="start-loop">
+                            <i class="fas fa-play"></i> Start Event Loop
+                        </button>
+                    </div>
+
+                    <div class="control-group">
+                        <button id="reset-loop">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-value">'Start'</span>);
+                    <br>
+                    <span class="code-variable">setTimeout</span>(() => {
+                    &nbsp;&nbsp;<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-value">'Callback'</span>);
+                    }, <span class="code-value">0</span>);
+                    <br>
+                    <span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-value">'End'</span>);
+                </div>
+
+                <div class="console-output" id="loop-output">
+                    // Execution order will appear here
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Asynchronous JavaScript Guide</strong> | Created with HTML5, CSS3, and JavaScript</p>
+            <p>Master async programming to build responsive web applications!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and sections
+                tabBtns.forEach(b => b.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // Add active class to clicked button
+                btn.classList.add('active');
+
+                // Show corresponding section
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Callbacks
+        const runCallbackBtn = document.getElementById('run-callback');
+        const callbackOutput = document.getElementById('callback-output');
+
+        runCallbackBtn.addEventListener('click', () => {
+            const delay = parseInt(document.getElementById('callback-delay').value) || 1500;
+
+            callbackOutput.innerHTML = '';
+            logToConsole(callbackOutput, "Starting callback example...");
+
+            // Simulate fetching user data
+            function getUser(id, callback) {
+                logToConsole(callbackOutput, `Setting timeout for ${delay}ms...`);
+
+                setTimeout(() => {
+                    logToConsole(callbackOutput, `Fetched user ${id}`);
+                    callback({ id: id, name: 'John Doe' });
+                }, delay);
+            }
+
+            // Using the callback
+            logToConsole(callbackOutput, "Calling getUser()...");
+            getUser(1, (user) => {
+                logToConsole(callbackOutput, `User: ${user.name}`);
+            });
+        });
+
+        // Promises
+        const runPromiseBtn = document.getElementById('run-promise');
+        const promiseOutput = document.getElementById('promise-output');
+
+        runPromiseBtn.addEventListener('click', () => {
+            const delay = parseInt(document.getElementById('promise-delay').value) || 2000;
+            const success = document.getElementById('promise-success').value === 'true';
+
+            promiseOutput.innerHTML = '';
+            logToConsole(promiseOutput, "Creating promise...");
+
+            // Create a promise
+            const myPromise = new Promise((resolve, reject) => {
+                logToConsole(promiseOutput, `Promise pending for ${delay}ms...`);
+
+                setTimeout(() => {
+                    if (success) {
+                        logToConsole(promiseOutput, "Promise resolved!");
+                        resolve('Promise resolved successfully!');
+                    } else {
+                        logToConsole(promiseOutput, "Promise rejected!");
+                        reject(new Error('Promise rejected!'));
+                    }
+                }, delay);
+            });
+
+            // Handle the promise
+            myPromise
+                .then(result => {
+                    logToConsole(promiseOutput, result);
+                })
+                .catch(error => {
+                    logToConsole(promiseOutput, error.message, true);
+                });
+        });
+
+        // Async/Await
+        const runAsyncBtn = document.getElementById('run-async');
+        const asyncOutput = document.getElementById('async-output');
+
+        runAsyncBtn.addEventListener('click', async () => {
+            const delay = parseInt(document.getElementById('async-delay').value) || 1000;
+
+            asyncOutput.innerHTML = '';
+            logToConsole(asyncOutput, "Starting async/await example...");
+
+            // Simulate fetching data
+            function fetchData() {
+                return new Promise(resolve => {
+                    logToConsole(asyncOutput, `Fetching data (delay: ${delay}ms)...`);
+
+                    setTimeout(() => {
+                        resolve('Data retrieved successfully!');
+                    }, delay);
+                });
+            }
+
+            // Using async/await
+            async function getData() {
+                try {
+                    logToConsole(asyncOutput, "Calling fetchData() with await...");
+                    const result = await fetchData();
+                    logToConsole(asyncOutput, result);
+                } catch (error) {
+                    logToConsole(asyncOutput, error, true);
+                }
+            }
+
+            await getData();
+        });
+
+        // Fetch API
+        const runFetchBtn = document.getElementById('run-fetch');
+        const fetchConsole = document.getElementById('fetch-console');
+        const fetchResponse = document.getElementById('fetch-response');
+
+        runFetchBtn.addEventListener('click', async () => {
+            const url = document.getElementById('api-select').value;
+
+            fetchConsole.innerHTML = '';
+            fetchResponse.innerHTML = '';
+
+            logToConsole(fetchConsole, `Fetching data from: ${url}`);
+            fetchResponse.innerHTML = '<div class="loader"></div> Loading...';
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                logToConsole(fetchConsole, "Data fetched successfully!");
+
+                // Display formatted JSON
+                fetchResponse.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                logToConsole(fetchConsole, `Fetch error: ${error.message}`, true);
+                fetchResponse.innerHTML = `<div class="console-error">${error.message}</div>`;
+            }
+        });
+
+        // Event Loop
+        const startLoopBtn = document.getElementById('start-loop');
+        const resetLoopBtn = document.getElementById('reset-loop');
+        const loopOutput = document.getElementById('loop-output');
+        const stackMain = document.getElementById('stack-main');
+        const apiTimeout = document.getElementById('api-timeout');
+        const queueCallback = document.getElementById('queue-callback');
+
+        startLoopBtn.addEventListener('click', async () => {
+            loopOutput.innerHTML = '';
+
+            // Reset positions
+            stackMain.style.opacity = '1';
+            apiTimeout.style.opacity = '0';
+            queueCallback.style.opacity = '0';
+            stackMain.textContent = 'main()';
+
+            // Start execution
+            logToConsole(loopOutput, "Start");
+
+            // Move setTimeout to Web APIs
+            await delay(1000);
+            apiTimeout.style.opacity = '1';
+            logToConsole(loopOutput, "setTimeout sent to Web APIs");
+
+            // Continue execution
+            await delay(1000);
+            logToConsole(loopOutput, "End");
+
+            // Move callback to queue
+            await delay(1000);
+            apiTimeout.style.opacity = '0';
+            queueCallback.style.opacity = '1';
+            logToConsole(loopOutput, "Callback moved to queue");
+
+            // Event loop pushes callback to stack
+            await delay(1000);
+            queueCallback.style.opacity = '0';
+            stackMain.textContent = 'callback()';
+            logToConsole(loopOutput, "Callback");
+
+            // Finish
+            await delay(500);
+            stackMain.textContent = 'main()';
+        });
+
+        resetLoopBtn.addEventListener('click', () => {
+            loopOutput.innerHTML = '';
+            stackMain.style.opacity = '1';
+            apiTimeout.style.opacity = '0';
+            queueCallback.style.opacity = '0';
+            stackMain.textContent = 'main()';
+        });
+
+        // Helper functions
+        function logToConsole(consoleElement, message, isError = false) {
+            const now = new Date();
+            const timestamp = now.toTimeString().split(' ')[0] + '.' + now.getMilliseconds().toString().padStart(3, '0');
+
+            const line = document.createElement('div');
+            line.className = 'console-line';
+
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'console-timestamp';
+            timeSpan.textContent = `[${timestamp}] `;
+
+            const msgSpan = document.createElement('span');
+            msgSpan.className = isError ? 'console-error' : 'console-message';
+            msgSpan.textContent = message;
+
+            line.appendChild(timeSpan);
+            line.appendChild(msgSpan);
+            consoleElement.appendChild(line);
+
+            // Scroll to bottom
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>
